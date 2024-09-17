@@ -12,6 +12,7 @@ export default async function ProtectedPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user?.id) return redirect("/sign-in");
   const { data: trips } = await supabase
     .from("trips")
     .select("name, id")

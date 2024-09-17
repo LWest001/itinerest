@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
 import { baskerville } from "@/components/ui/fonts";
+import HeaderAuth from "@/components/header-auth";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -41,11 +42,9 @@ export default function RootLayout({
                     >
                       Itinerest
                     </Link>
-                    <div className="flex items-center gap-2">
-                      <DeployButton />
-                    </div>
                   </div>
                   <div className="flex gap-2">
+                    <HeaderAuth />
                     <ThemeSwitcher />
                   </div>
                 </div>

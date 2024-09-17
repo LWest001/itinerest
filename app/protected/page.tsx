@@ -13,10 +13,11 @@ export default async function ProtectedPage() {
   } = await supabase.auth.getUser();
 
   if (!user?.id) return redirect("/sign-in");
+
   const { data: trips } = await supabase
     .from("trips")
     .select("name, id")
-    .eq("created_by", user?.id);
+    .eq("created_by", user.id);
 
   if (!user) {
     return redirect("/sign-in");

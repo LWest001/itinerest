@@ -1,5 +1,6 @@
 import NextLogo from "./next-logo";
 import SupabaseLogo from "./supabase-logo";
+import { baskerville } from "./ui/fonts";
 
 export default function Header() {
   return (
@@ -9,7 +10,7 @@ export default function Header() {
         <a
           href="/"
           target="_blank"
-          className="font-bold hover:underline"
+          className={`${baskerville.className} font-bold hover:underline`}
           rel="noreferrer"
         >
           Itinerest

@@ -1,12 +1,10 @@
 import DeployButton from "@/components/deploy-button";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { baskerville } from "@/components/ui/fonts";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -14,8 +12,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Itinerest",
+  description: "The world's best collaborative trip planning tool.",
 };
 
 export default function RootLayout({
@@ -36,14 +34,18 @@ export default function RootLayout({
             <div className="flex-1 w-full flex flex-col gap-20 items-center">
               <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
                 <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                  <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>Itinerest</Link>
+                  <div className="flex gap-5 items-center font-semibold ">
+                    <Link
+                      href={"/"}
+                      className={`${baskerville.className} text-xl`}
+                    >
+                      Itinerest
+                    </Link>
                     <div className="flex items-center gap-2">
                       <DeployButton />
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                     <ThemeSwitcher />
                   </div>
                 </div>

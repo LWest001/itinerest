@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Database } from "@/database.types";
 import { Button } from "@/components/ui/button";
 import { SupabaseClient } from "@supabase/supabase-js";
+import TripLinks from "@/components/ui/trips/triplinks";
 
 export default async function ProtectedPage() {
   const supabase: SupabaseClient<Database> = createClient();
@@ -36,7 +37,8 @@ export default async function ProtectedPage() {
       <div className="flex flex-col gap-2 items-start">
         <h2 className="font-bold text-2xl mb-4">Your trips</h2>
 
-        {tripButtons}
+        {trips && <TripLinks trips={trips} />}
+
         <Button variant={"secondary"}>Start a new trip</Button>
       </div>
     </div>

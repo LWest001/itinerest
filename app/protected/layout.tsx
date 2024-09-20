@@ -1,7 +1,8 @@
 import SideNav from "@/components/ui/dashboard/sidenav";
-import React from "react";
 
-function Layout({ children }: { children: React.ReactNode }) {
+type Props = { children: React.ReactNode };
+
+function Layout({ children }: Props) {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="w-full flex-none md:w-64">

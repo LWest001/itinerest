@@ -4,6 +4,8 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { start } from "repl";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -127,4 +129,19 @@ export const signOutAction = async () => {
   const supabase = createClient();
   await supabase.auth.signOut();
   return redirect("/sign-in");
+};
+
+export const createTrip = async (formData: any) => {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("trips")
+    .insert([{ name: formData.get("name"), start_date: formData.get("start_date"), end_date: formData.get("end_date"),city: formData.get("city"), lodging_name: formData.get("lodging_name") }])
+    .select();
+  if (!error) {
+    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
+    revalidatePath("/protected/trips");
+    redirect("/protected/trips");
+  } else {
+    console.error(formData,error);
+  }
 };

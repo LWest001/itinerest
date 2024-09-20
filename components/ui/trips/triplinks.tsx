@@ -1,14 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 
-function TripLinks({
-  trips,
-}: {
+type Props = {
   trips: {
     name: string | null;
     id: string;
   }[];
-}) {
+};
+
+function TripLinks({ trips }: Props) {
   return (
     <div className="flex gap-2 w-full max-w-full flex-wrap">
       {trips.map((trip) => (

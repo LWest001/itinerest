@@ -16,11 +16,11 @@ export const metadata = {
   description: "The world's best collaborative trip planning tool.",
 };
 
-export default async function RootLayout({
-  children,
-}: {
+type Props = {
   children: React.ReactNode;
-}) {
+};
+
+export default async function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">

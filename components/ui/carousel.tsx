@@ -8,6 +8,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Trip } from "@/global.types";
+import clsx from "clsx";
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -252,6 +254,42 @@ const CarouselNext = React.forwardRef<
 })
 CarouselNext.displayName = "CarouselNext"
 
+function CarouselDotNavigation({
+  showNav,
+  trips,
+  api,
+  current,
+}: {
+  showNav: boolean;
+  trips: Trip[];
+  api: CarouselApi;
+  current: number;
+}) {
+  return (
+    <div className="flex justify-center p-4 ">
+      <div
+        className={clsx("flex space-x-2 items-center h-3 w-12", {
+          hidden: showNav === false,
+        })}
+      >
+        {trips.map((trip, i) => (
+          <span
+            key={trip.id}
+            onClick={() => api?.scrollTo(i)}
+            className={clsx(
+              "block h-2 w-2 rounded-full transition-all duration-10000 cursor-pointer",
+              {
+                "bg-blue-600 h-3 w-3": i === current - 1,
+                "bg-gray-300": i !== current - 1,
+              }
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -259,4 +297,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-}
+  CarouselDotNavigation,
+};

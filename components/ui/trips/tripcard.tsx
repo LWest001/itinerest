@@ -3,12 +3,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../card";
-import { Pencil } from "lucide-react";
-import { Button } from "../button";
 import { EditTrip } from "./buttons";
 
 type Props = { trip: Trip };

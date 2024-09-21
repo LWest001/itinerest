@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { Trip } from "@/global.types";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -130,7 +131,7 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const createTrip = async (formData: any) => {
+export const createTrip = async (formData: FormData) => {
   const supabase = createClient();
   let { data, error } = await supabase
     .from("trips")
@@ -144,3 +145,21 @@ export const createTrip = async (formData: any) => {
     console.error(formData,error);
   }
 };
+
+export const updateTrip = async (id: Trip["id"], formData: FormData) => {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("trips")
+    .update({ name: formData.get("name"), start_date: formData.get("start_date"), end_date: formData.get("end_date"),city: formData.get("city"), lodging_name: formData.get("lodging_name") })
+    .eq('id', id);
+  
+  if (!error) {
+    
+    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
+    console.log(formData)
+    revalidatePath("/protected/trips");
+    redirect("/protected/trips");
+  } else {
+  }
+};
+

@@ -1,36 +1,14 @@
-import { createClient } from "@/utils/supabase/server";
-import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { Database } from "@/database.types";
 import { Button } from "@/components/ui/button";
-import { SupabaseClient } from "@supabase/supabase-js";
 import TripLinks from "@/components/ui/trips/triplinks";
+import { getAllTrips, getUser } from "@/lib/data";
 
 export default async function ProtectedPage() {
-  const supabase: SupabaseClient<Database> = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user?.id) return redirect("/sign-in");
 
-  const { data: trips } = await supabase
-    .from("trips")
-    .select()
-    .eq("created_by", user.id);
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
-  const tripButtons =
-    trips &&
-    trips.map((trip) => (
-      <Button key={trip.id} className="btn">
-        {trip.name}
-      </Button>
-    ));
+  const trips = await getAllTrips();
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">

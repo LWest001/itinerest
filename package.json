@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gentypes": "eval $(grep '^PROJECT_REF' .env) &&supabase gen types --lang=typescript --project-id \"$PROJECT_REF\" --schema public > database.types.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
@@ -16,6 +17,7 @@
     "autoprefixer": "10.4.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.3.0",
     "geist": "^1.2.1",
     "lucide-react": "^0.436.0",
     "next": "latest",

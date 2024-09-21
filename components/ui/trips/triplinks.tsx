@@ -1,22 +1,32 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
+import TripCard from "./tripcard";
+import { Trip } from "@/global.types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../carousel";
 
 type Props = {
-  trips: {
-    name: string | null;
-    id: string;
-  }[];
+  trips: Trip[];
 };
 
 function TripLinks({ trips }: Props) {
   return (
-    <div className="flex gap-2 w-full max-w-full flex-wrap">
-      {trips.map((trip) => (
-        <Button key={trip.id} className="btn">
-          {trip.name}
-        </Button>
-      ))}
-    </div>
+    <Carousel className="max-w-full">
+      <CarouselPrevious />
+      <CarouselContent className="max-w-full">
+        {trips.map((trip) => (
+          <CarouselItem key={trip.id} className="md:basis-1/2">
+            <TripCard trip={trip} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselNext />
+    </Carousel>
   );
 }
 

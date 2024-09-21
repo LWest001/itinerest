@@ -18,6 +18,7 @@ export type Database = {
           name: string
           phone: string | null
           time: string | null
+          trip: string
           website: string | null
         }
         Insert: {
@@ -28,6 +29,7 @@ export type Database = {
           name: string
           phone?: string | null
           time?: string | null
+          trip: string
           website?: string | null
         }
         Update: {
@@ -38,9 +40,18 @@ export type Database = {
           name?: string
           phone?: string | null
           time?: string | null
+          trip?: string
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "activities_trip_fkey"
+            columns: ["trip"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       spatial_ref_sys: {
         Row: {
@@ -68,7 +79,9 @@ export type Database = {
       }
       trips: {
         Row: {
+          city: string
           created_at: string
+          created_by: string | null
           end_date: string
           id: string
           lodging_coordinates: unknown | null
@@ -77,7 +90,9 @@ export type Database = {
           start_date: string
         }
         Insert: {
+          city: string
           created_at?: string
+          created_by?: string | null
           end_date: string
           id?: string
           lodging_coordinates?: unknown | null
@@ -86,7 +101,9 @@ export type Database = {
           start_date: string
         }
         Update: {
+          city?: string
           created_at?: string
+          created_by?: string | null
           end_date?: string
           id?: string
           lodging_coordinates?: unknown | null

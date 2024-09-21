@@ -17,7 +17,7 @@ export default async function ProtectedPage() {
 
   const { data: trips } = await supabase
     .from("trips")
-    .select("name, id")
+    .select()
     .eq("created_by", user.id);
 
   if (!user) {

@@ -142,7 +142,7 @@ export const createTrip = async (formData: FormData) => {
     revalidatePath("/protected/trips");
     redirect("/protected/trips");
   } else {
-    console.error(formData,error);
+    console.error(error);
   }
 };
 
@@ -153,13 +153,26 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
     .update({ name: formData.get("name"), start_date: formData.get("start_date"), end_date: formData.get("end_date"),city: formData.get("city"), lodging_name: formData.get("lodging_name") })
     .eq('id', id);
   
-  if (!error) {
-    
+  if (!error) {    
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
-    console.log(formData)
     revalidatePath("/protected/trips");
     redirect("/protected/trips");
   } else {
+    console.error(error);
   }
 };
 
+export const deleteTrip = async (id: Trip["id"]) => {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("trips")
+    .delete()
+    .eq('id', id);
+  if (!error) {
+    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
+    revalidatePath("/protected/trips");
+    redirect("/protected/trips");
+  } else {
+    console.error(error);
+  }
+}

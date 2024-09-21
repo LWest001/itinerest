@@ -1,7 +1,7 @@
 import { Trip } from "@/global.types";
 import { getTripById } from "@/lib/data";
 import { Input } from "@/components/ui/input";
-import { updateTrip } from "@/app/actions";
+import { deleteTrip, updateTrip } from "@/app/actions";
 import { Submit } from "@/components/ui/submit";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ export default async function EditTrip({ params }: Props) {
   const { id } = params;
   const trip = await getTripById(id);
   const updateTripWithId = updateTrip.bind(null, id);
+  const deleteTripWithId = deleteTrip.bind(null, id);
 
   return (
     <div>
@@ -70,7 +71,9 @@ export default async function EditTrip({ params }: Props) {
         <Button variant={"ghost"} href={"/protected/trips"}>
           Discard changes
         </Button>
-        <Button variant={"destructive"}>Delete trip</Button>
+        <form action={deleteTripWithId}>
+          <Button variant={"destructive"}>Delete trip</Button>
+        </form>
       </div>
     </div>
   );

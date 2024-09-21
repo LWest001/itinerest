@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "../card";
 import { EditTrip } from "./buttons";
-import { ArrowRight, MapPin, PinIcon } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 
 type Props = { trip: Trip };
 

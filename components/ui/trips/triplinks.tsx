@@ -88,14 +88,15 @@ function TripLinks({ trips }: Props) {
             })}
           />
         </div>
-        <CarouselDotNavigation
+        {/* <CarouselDotNavigation
           showNav={showNav}
           trips={trips}
           api={api}
           current={current}
-        />
+        /> */}
       </Carousel>
-      <CreateTrip />
+
+      <CreateTrip className="mt-3" />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../button";
 
-export function CreateTrip() {
+export function CreateTrip({ ...props }) {
   return (
     // <Link
     //   href="/protected/trips/create"
@@ -11,17 +11,26 @@ export function CreateTrip() {
     // >
     //   <PlusIcon className="h-5" />
     // </Link>
-    <Button variant={"secondary"} href="/protected/trips/create">
+    <Button variant={"secondary"} href="/protected/trips/create" {...props}>
       Start a new trip
     </Button>
   );
 }
 
-export function EditTrip({ id }: { id: Trip["id"] }) {
+export function EditTrip({
+  id,
+  className,
+}: {
+  id: Trip["id"];
+  className?: string;
+}) {
   return (
     <Link
       href={`/protected/trips/${id}/edit`}
-      className="ml-auto rounded-bl-lg z-10 h-8 w-8 flex place-items-center justify-center hover:bg-gray-700"
+      className={
+        "rounded-bl-lg z-10 h-8 w-8 flex place-items-center justify-center hover:bg-gray-700 !mt-0 " +
+        className
+      }
     >
       <Pencil className=" text-slate-200 h-4" />
     </Link>

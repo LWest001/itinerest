@@ -16,7 +16,7 @@ export async function getUser() {
 
 export async function getAllTrips() {
     const supabase = createClient();
-    const { data, error } = await supabase.from('trips').select('*');
+    const { data, error } = await supabase.from('trips').select('*').order('start_date');
 
     if (error) {
         console.error('Error fetching trips:', error);

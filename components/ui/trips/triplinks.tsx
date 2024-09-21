@@ -63,12 +63,9 @@ function TripLinks({ trips }: Props) {
   }, [api]);
 
   return (
-    <div>
-      <Carousel className="w-full" setApi={setApi} opts={{ duration: 20 }}>
-        <CarouselPrevious
-          className={clsx("hidden md:flex", { "!hidden": showNav === false })}
-        />
-        <CarouselContent className="max-w-full">
+    <div className="max-w-full w-full">
+      <Carousel setApi={setApi} opts={{ duration: 20 }} className="w-full">
+        <CarouselContent>
           {trips.map((trip) => (
             <CarouselItem
               key={trip.id}
@@ -81,11 +78,16 @@ function TripLinks({ trips }: Props) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext
-          className={clsx("hidden md:flex", {
-            "!hidden": showNav === false,
-          })}
-        />
+        <div className="flex gap-2 my-2">
+          <CarouselPrevious
+            className={clsx({ "!hidden": showNav === false })}
+          />
+          <CarouselNext
+            className={clsx({
+              "!hidden": showNav === false,
+            })}
+          />
+        </div>
         <CarouselDotNavigation
           showNav={showNav}
           trips={trips}

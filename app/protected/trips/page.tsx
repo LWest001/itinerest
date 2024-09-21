@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { CreateTrip } from "@/components/ui/trips/buttons";
 import TripLinks from "@/components/ui/trips/triplinks";
 import { getAllTrips, getUser } from "@/lib/data";
 

@@ -1,16 +1,10 @@
 "use client";
 
-import {
-  UserGroupIcon,
-  GlobeEuropeAfricaIcon,
-  DocumentDuplicateIcon,
-  HomeIcon,
-} from "@heroicons/react/24/outline";
+import { GlobeEuropeAfricaIcon, HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
-import { use } from "react";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.

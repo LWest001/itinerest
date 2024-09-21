@@ -67,7 +67,9 @@ export default async function EditTrip({ params }: Props) {
         <Submit type="submit">Save trip</Submit>
       </form>
       <div className="flex gap-2 items-center justify-center w-full max-w-sm">
-        <Button variant={"ghost"}>Discard changes</Button>
+        <Button variant={"ghost"} href={"/protected/trips"}>
+          Discard changes
+        </Button>
         <Button variant={"destructive"}>Delete trip</Button>
       </div>
     </div>

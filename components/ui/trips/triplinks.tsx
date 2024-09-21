@@ -29,6 +29,12 @@ function TripLinks({ trips }: Props) {
       return;
     }
 
+    if (!api?.canScrollNext() && !api?.canScrollPrev()) {
+      setShowNav(false);
+    } else {
+      setShowNav(true);
+    }
+
     setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap() + 1);
 
@@ -41,29 +47,25 @@ function TripLinks({ trips }: Props) {
       return;
     }
 
-    if (!api?.canScrollNext() && !api?.canScrollPrev()) {
-      setShowNav(false);
-    } else {
-      setShowNav(true);
-    }
+    api?.on("resize", () => {
+      if (trips.length < 2) {
+        setShowNav(false);
+        return;
+      }
+
+      if (!api?.canScrollNext() && !api?.canScrollPrev()) {
+        setShowNav(false);
+      } else {
+        setShowNav(true);
+      }
+    });
   }, [api]);
-
-  api?.on("resize", () => {
-    if (trips.length < 2) {
-      setShowNav(false);
-      return;
-    }
-
-    if (!api?.canScrollNext() && !api?.canScrollPrev()) {
-      setShowNav(false);
-    } else {
-      setShowNav(true);
-    }
-  });
 
   return (
     <Carousel className="w-full" setApi={setApi} opts={{ duration: 20 }}>
-      <CarouselPrevious className="hidden md:flex" />
+      <CarouselPrevious
+        className={clsx("hidden md:flex", { "!hidden": showNav === false })}
+      />
       <CarouselContent className="max-w-full">
         {trips.map((trip) => (
           <CarouselItem
@@ -77,7 +79,11 @@ function TripLinks({ trips }: Props) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselNext className="hidden md:flex" />
+      <CarouselNext
+        className={clsx("hidden md:flex", {
+          "!hidden": showNav === false,
+        })}
+      />
       <CarouselDotNavigation
         showNav={showNav}
         trips={trips}

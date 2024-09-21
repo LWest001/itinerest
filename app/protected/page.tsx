@@ -16,8 +16,6 @@ export default async function ProtectedPage() {
         <h2 className="font-bold text-2xl mb-4">Your trips</h2>
 
         {trips && <TripLinks trips={trips} />}
-
-        <Button variant={"secondary"}>Start a new trip</Button>
       </div>
     </div>
   );

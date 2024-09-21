@@ -15,7 +15,6 @@ export default async function Trips() {
       <div className="flex flex-col gap-2 items-start">
         <div className="flex space-x-2 items-center mb-4">
           <h2 className="font-bold text-2xl ">Your trips</h2>
-          <CreateTrip />
         </div>
         {trips && <TripLinks trips={trips} />}
       </div>

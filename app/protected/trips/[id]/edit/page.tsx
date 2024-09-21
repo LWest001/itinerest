@@ -63,5 +63,3 @@ export async function EditTrip({ params }: { params: { id: Trip["id"] } }) {
     </>
   );
 }
-
-export default EditTrip;

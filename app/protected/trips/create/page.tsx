@@ -1,45 +1,32 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { createTrip } from "@/app/actions";
 import { Submit } from "@/components/ui/submit";
-import { Label } from "@/components/ui/label";
+import { formatDate } from "@/lib/utils";
+import {
+  City,
+  EndDate,
+  LodgingName,
+  StartDate,
+  TripName,
+} from "@/components/ui/trips/inputs";
 
 export default function Form() {
+  const minDate = formatDate(new Date());
   return (
     <>
       <form
         className="flex w-full max-w-sm items-center gap-5 flex-col"
         action={createTrip}
       >
-        <div className="w-full">
-          <Label htmlFor="name">Name your trip</Label>
-          <Input type="text" placeholder="New trip" name="name" />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="city">
-            Where are you going? (Try the name of a city)
-          </Label>
-          <Input type="text" placeholder="City" name="city" />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="lodging_name">Where are you sleeping?</Label>
-          <Input
-            type="text"
-            placeholder="Where are you staying?"
-            name="lodging_name"
-          />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="start_date">Start date</Label>
-          <Input type="date" placeholder="start date" name="start_date" />
-        </div>
-        <div className="w-full">
-          <Label htmlFor="end_date">End date</Label>
-          <Input type="date" placeholder="end date" name="end_date" />
-        </div>
+        <TripName label="Name your trip" />
+        <City label="Where are you going? (Try the name of a city)" />
+        <LodgingName label="Where are you sleeping?" />
+        <StartDate minDate={minDate} label="Start date" />
+        <EndDate label="End date" />
         <Submit type="submit">Create trip</Submit>
       </form>
     </>
   );
 }
+

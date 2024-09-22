@@ -24,6 +24,7 @@ import { redirect, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { CommandLoading } from "cmdk";
+import { getPointFromGeocodeResult } from "@/utils/utils";
 
 export function StartDate({
   minDate,
@@ -87,25 +88,25 @@ export function LodgingName({
   );
 }
 
-export function City({
-  label,
-  defaultValue,
-}: {
-  label: string;
-  defaultValue?: string;
-}) {
-  return (
-    <div className="w-full">
-      <Label htmlFor="city">{label}</Label>
-      <Input
-        type="text"
-        placeholder="City"
-        name="city"
-        defaultValue={defaultValue}
-      />
-    </div>
-  );
-}
+// export function City({
+//   label,
+//   defaultValue,
+// }: {
+//   label: string;
+//   defaultValue?: string;
+// }) {
+//   return (
+//     <div className="w-full">
+//       <Label htmlFor="destination">{label}</Label>
+//       <Input
+//         type="text"
+//         placeholder="City"
+//         name="destination"
+//         defaultValue={defaultValue}
+//       />
+//     </div>
+//   );
+// }
 
 export function TripName({
   label,
@@ -156,7 +157,24 @@ export function CityCombobox({
 
   return (
     <div className="w-full flex flex-col">
-      <Label htmlFor="city">{label}</Label>
+      <Label htmlFor="destination">{label}</Label>
+      <Input
+        value={
+          options.find((option) => String(option.place_id) === String(value))
+            ?.display_name
+        }
+        name="destination"
+        className="hidden"
+      />
+      <Input
+        value={
+          getPointFromGeocodeResult(
+            options.find((option) => String(option.place_id) === String(value))
+          ) || ""
+        }
+        name="destination_coordinates"
+        className="hidden"
+      />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -169,7 +187,9 @@ export function CityCombobox({
               ? options.find(
                   (option) => String(option.place_id) === String(value)
                 )?.display_name
-              : "Select option..."}
+              : options?.length
+                ? "Select option..."
+                : "Find your destination..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -178,6 +198,7 @@ export function CityCombobox({
             <CommandInput
               //   className="w-full"
               placeholder={defaultValue || "Search"}
+              name="destination"
               onValueChange={(s) => {
                 setForceMount(false);
                 handleValueChange(s);

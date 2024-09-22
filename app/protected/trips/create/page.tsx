@@ -33,12 +33,12 @@ export default async function Form({ searchParams }: Props) {
         action={createTrip}
       >
         <TripName label="Name your trip" />
-        <City label="Where are you going? (Try the name of a city)" />
+        {/* <City label="Where are you going? (Try the name of a city)" /> */}
+        <CityCombobox label="Destination" options={searchResults} />
         <LodgingName label="Where are you sleeping?" />
         <StartDate minDate={minDate} label="Start date" />
         <EndDate label="End date" />
         <Submit type="submit">Create trip</Submit>
-        <CityCombobox label="City" options={searchResults} />
       </form>
     </>
   );

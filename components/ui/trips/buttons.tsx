@@ -11,8 +11,10 @@ export function CreateTrip({ ...props }) {
     // >
     //   <PlusIcon className="h-5" />
     // </Link>
-    <Button variant={"secondary"} href="/protected/trips/create" {...props}>
-      Start a new trip
+    <Button variant={"secondary"} asChild>
+      <Link href="/protected/trips/create" {...props}>
+        Start a new trip
+      </Link>
     </Button>
   );
 }

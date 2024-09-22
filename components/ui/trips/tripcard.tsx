@@ -42,7 +42,7 @@ function TripCard({ trip }: Props) {
       </CardHeader>
       <CardContent className="select-none flex flex-col gap-3 py-0">
         <CardDescription className="flex text-lg items-center gap-1">
-          <MapPin /> {trip.city}
+          <MapPin /> {trip.destination}
         </CardDescription>
       </CardContent>{" "}
       <CardFooter>

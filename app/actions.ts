@@ -1,6 +1,6 @@
 "use server";
 
-import { encodedRedirect } from "@/utils/utils";
+import { encodedRedirect, getTripsInsertionData } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -133,9 +133,10 @@ export const signOutAction = async () => {
 
 export const createTrip = async (formData: FormData) => {
   const supabase = createClient();
+  console.log(formData)
   let { data, error } = await supabase
     .from("trips")
-    .insert([{ name: formData.get("name"), start_date: formData.get("start_date"), end_date: formData.get("end_date"),city: formData.get("city"), lodging_name: formData.get("lodging_name") }])
+    .insert([getTripsInsertionData(formData)])
     .select();
   if (!error) {
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
@@ -150,7 +151,7 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
   const supabase = createClient();
   let { data, error } = await supabase
     .from("trips")
-    .update({ name: formData.get("name"), start_date: formData.get("start_date"), end_date: formData.get("end_date"),city: formData.get("city"), lodging_name: formData.get("lodging_name") })
+    .update([getTripsInsertionData(formData)])
     .eq('id', id);
   
   if (!error) {    

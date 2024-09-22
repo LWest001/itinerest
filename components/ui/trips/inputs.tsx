@@ -1,18 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "../button";
-import { Input } from "../input";
-import { Label } from "../label";
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-import { ChevronsUpDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
+  CommandItem,
   CommandList,
-} from "../command";
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import { GeocodeSearchResult } from "@/global.types";
+import { redirect, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useDebouncedCallback } from "use-debounce";
+import { CommandLoading } from "cmdk";
 
 export function StartDate({
   minDate,
@@ -96,7 +107,6 @@ export function City({
   );
 }
 
-
 export function TripName({
   label,
   defaultValue,
@@ -117,41 +127,35 @@ export function TripName({
   );
 }
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 export function CityCombobox({
   label,
-  defaultValue,
+
+  options,
 }: {
   label: string;
-  defaultValue?: string;
+  options: GeocodeSearchResult[];
 }) {
+  const searchParams = useSearchParams();
+  const defaultValue = searchParams.get("search") || "Where are you going?";
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState<string>();
+  const [forceMount, setForceMount] = useState(false);
+  const handleValueChange = useDebouncedCallback((value: string) => {
+    setForceMount(false);
+    router.replace("/protected/trips/create?search=" + value);
+  }, 1000);
+
+  useEffect(() => {
+    if (options.length) {
+      setForceMount(true);
+    } else {
+      setForceMount(false);
+    }
+  }, [options]);
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col">
       <Label htmlFor="city">{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -159,36 +163,54 @@ export function CityCombobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className=" justify-between text-wrap h-auto"
           >
             {value
-              ? frameworks.find((framework) => framework.value === value)?.label
-              : "Select framework..."}
+              ? options.find(
+                  (option) => String(option.place_id) === String(value)
+                )?.display_name
+              : "Select option..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height]">
           <Command>
-            <CommandInput placeholder="Search framework..." />
+            <CommandInput
+              //   className="w-full"
+              placeholder={defaultValue || "Search"}
+              onValueChange={(s) => {
+                setForceMount(false);
+                handleValueChange(s);
+              }}
+            />
+
             <CommandList>
-              <CommandEmpty>No framework found.</CommandEmpty>
-              <CommandGroup>
-                {frameworks.map((framework) => (
+              <CommandEmpty
+                className={cn("py-6 text-center text-sm", {
+                  hidden: options?.length,
+                })}
+              >
+                No results found.
+              </CommandEmpty>
+              <CommandGroup forceMount={forceMount}>
+                {options.map((option) => (
                   <CommandItem
-                    key={framework.value}
-                    value={framework.value}
+                    key={option.place_id}
+                    value={String(option.place_id)}
                     onSelect={(currentValue) => {
                       setValue(currentValue === value ? "" : currentValue);
-                      setOpen(false);
+                      setOpen(currentValue === value ? true : false);
                     }}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value === framework.value ? "opacity-100" : "opacity-0"
+                        String(value) === String(option.place_id)
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
-                    {framework.label}
+                    {option.display_name}
                   </CommandItem>
                 ))}
               </CommandGroup>

@@ -1,5 +1,3 @@
-"use client";
-
 import { createTrip } from "@/app/actions";
 import { Submit } from "@/components/ui/submit";
 import { formatDate } from "@/lib/utils";
@@ -11,9 +9,23 @@ import {
   StartDate,
   TripName,
 } from "@/components/ui/trips/inputs";
+import { searchLocation } from "@/lib/data";
+import { Trip } from "@/global.types";
 
-export default function Form() {
+type Props = {
+  params: {
+    id: Trip["id"];
+  };
+  searchParams: {
+    search: string;
+  };
+};
+
+export default async function Form({ searchParams }: Props) {
   const minDate = formatDate(new Date());
+
+  const searchResults = await searchLocation(searchParams?.search);
+
   return (
     <>
       <form
@@ -26,9 +38,8 @@ export default function Form() {
         <StartDate minDate={minDate} label="Start date" />
         <EndDate label="End date" />
         <Submit type="submit">Create trip</Submit>
-        <CityCombobox label="City" />
+        <CityCombobox label="City" options={searchResults} />
       </form>
     </>
   );
 }
-

@@ -97,7 +97,7 @@ export type Database = {
           id?: string
           lodging_coordinates?: unknown | null
           lodging_name?: string | null
-          name: string
+          name?: string
           start_date: string
         }
         Update: {
@@ -108,7 +108,7 @@ export type Database = {
           id?: string
           lodging_coordinates?: unknown | null
           lodging_name?: string | null
-          name: string
+          name?: string
           start_date?: string
         }
         Relationships: []

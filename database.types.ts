@@ -79,9 +79,10 @@ export type Database = {
       }
       trips: {
         Row: {
-          city: string
           created_at: string
           created_by: string | null
+          desination_coordinates: unknown | null
+          destination: string
           end_date: string
           id: string
           lodging_coordinates: unknown | null
@@ -90,9 +91,10 @@ export type Database = {
           start_date: string
         }
         Insert: {
-          city: string
           created_at?: string
           created_by?: string | null
+          desination_coordinates?: unknown | null
+          destination: string
           end_date: string
           id?: string
           lodging_coordinates?: unknown | null
@@ -101,9 +103,10 @@ export type Database = {
           start_date: string
         }
         Update: {
-          city?: string
           created_at?: string
           created_by?: string | null
+          desination_coordinates?: unknown | null
+          destination?: string
           end_date?: string
           id?: string
           lodging_coordinates?: unknown | null

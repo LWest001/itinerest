@@ -69,7 +69,7 @@ function TripLinks({ trips }: Props) {
           {trips.map((trip) => (
             <CarouselItem
               key={trip.id}
-              className={clsx("sm:basis-1/2", {
+              className={clsx("sm:basis-1/2 first-of-type:pl-0", {
                 "lg:basis-1/3": trips.length > 2,
                 "xl:basis-1/4": trips.length > 3,
               })}

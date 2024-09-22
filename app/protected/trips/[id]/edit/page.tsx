@@ -13,6 +13,17 @@ import {
   TripName,
 } from "@/components/ui/trips/inputs";
 import { formatDate } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 type Props = {
   params: {
@@ -29,24 +40,53 @@ export default async function EditTrip({ params }: Props) {
 
   return (
     <div>
-      <form
-        className="flex w-full max-w-sm items-center gap-5 flex-col my-6"
-        action={updateTripWithId}
-      >
-        <TripName label="Trip name" />
-        <City label="Trip location" />
-        <LodgingName label="Lodging" />
-        <StartDate minDate={minDate} label="Start date" />
-        <EndDate label="End date" />
-        <Submit type="submit">Save trip</Submit>
-      </form>
+      {trip && (
+        <form
+          className="flex w-full max-w-sm items-center gap-5 flex-col my-6"
+          action={updateTripWithId}
+        >
+          <TripName label="Trip name" defaultValue={trip.name} />
+          <City label="Trip location" defaultValue={trip?.city} />
+          <LodgingName
+            label="Lodging"
+            defaultValue={trip?.lodging_name || undefined}
+          />
+          <StartDate
+            minDate={minDate}
+            label="Start date"
+            defaultValue={trip?.start_date}
+          />
+          <EndDate label="End date" defaultValue={trip?.end_date} />
+          <Submit type="submit">Save trip</Submit>
+        </form>
+      )}
       <div className="flex gap-2 items-center justify-center w-full max-w-sm">
         <Button variant={"ghost"} href={"/protected/trips"}>
           Discard changes
         </Button>
-        <form action={deleteTripWithId}>
-          <Button variant={"destructive"}>Delete trip</Button>
-        </form>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant={"destructive"}>Delete trip</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to permanently delete this trip?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <form action={deleteTripWithId}>
+                  <Button>Continue</Button>
+                </form>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

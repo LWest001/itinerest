@@ -1,9 +1,7 @@
 import { Trip } from "@/global.types";
 import { getTripById } from "@/lib/data";
-import { Input } from "@/components/ui/input";
 import { deleteTrip, updateTrip } from "@/app/actions";
 import { Submit } from "@/components/ui/submit";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
   City,
@@ -24,6 +22,7 @@ import {
   AlertDialogTrigger,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import Link from "next/link";
 
 type Props = {
   params: {
@@ -61,8 +60,8 @@ export default async function EditTrip({ params }: Props) {
         </form>
       )}
       <div className="flex gap-2 items-center justify-center w-full max-w-sm">
-        <Button variant={"ghost"} href={"/protected/trips"}>
-          Discard changes
+        <Button asChild variant={"ghost"}>
+          <Link href={"/protected/trips"}>Discard changes</Link>
         </Button>
         <AlertDialog>
           <AlertDialogTrigger asChild>

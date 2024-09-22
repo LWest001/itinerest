@@ -5,6 +5,7 @@ import { Submit } from "@/components/ui/submit";
 import { formatDate } from "@/lib/utils";
 import {
   City,
+  CityCombobox,
   EndDate,
   LodgingName,
   StartDate,
@@ -25,6 +26,7 @@ export default function Form() {
         <StartDate minDate={minDate} label="Start date" />
         <EndDate label="End date" />
         <Submit type="submit">Create trip</Submit>
+        <CityCombobox label="City" />
       </form>
     </>
   );

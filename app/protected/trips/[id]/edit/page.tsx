@@ -1,16 +1,7 @@
 import { Trip } from "@/global.types";
-import { getTripById } from "@/lib/data";
+import { getTripById, searchLocation } from "@/lib/data";
 import { deleteTrip, updateTrip } from "@/app/actions";
-import { Submit } from "@/components/ui/submit";
 import { Button } from "@/components/ui/button";
-import {
-  City,
-  EndDate,
-  LodgingName,
-  StartDate,
-  TripName,
-} from "@/components/ui/trips/inputs";
-import { formatDate } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,19 +14,23 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import FormFields from "@/components/ui/trips/formfields";
 
 type Props = {
   params: {
     id: Trip["id"];
   };
+  searchParams: {
+    search: string;
+  };
 };
 
-export default async function EditTrip({ params }: Props) {
+export default async function EditTrip({ params, searchParams }: Props) {
   const { id } = params;
   const trip = await getTripById(id);
   const updateTripWithId = updateTrip.bind(null, id);
   const deleteTripWithId = deleteTrip.bind(null, id);
-  const minDate = formatDate(new Date());
+  const searchResults = await searchLocation(searchParams?.search);
 
   return (
     <div>
@@ -44,19 +39,11 @@ export default async function EditTrip({ params }: Props) {
           className="flex w-full max-w-sm items-center gap-5 flex-col my-6"
           action={updateTripWithId}
         >
-          <TripName label="Trip name" defaultValue={trip.name} />
-          <City label="Trip location" defaultValue={trip?.city} />
-          <LodgingName
-            label="Lodging"
-            defaultValue={trip?.lodging_name || undefined}
+          <FormFields
+            trip={trip}
+            formType="edit"
+            searchResults={searchResults}
           />
-          <StartDate
-            minDate={minDate}
-            label="Start date"
-            defaultValue={trip?.start_date}
-          />
-          <EndDate label="End date" defaultValue={trip?.end_date} />
-          <Submit type="submit">Save trip</Submit>
         </form>
       )}
       <div className="flex gap-2 items-center justify-center w-full max-w-sm">

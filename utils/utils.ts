@@ -33,4 +33,3 @@ export function getTripsInsertionData(data: FormData) {
 
   return tripData;
 }
-

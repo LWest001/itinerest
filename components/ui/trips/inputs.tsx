@@ -19,22 +19,21 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { GeocodeSearchResult } from "@/global.types";
+import { GeocodeSearchResult, Trip } from "@/global.types";
 import { redirect, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { CommandLoading } from "cmdk";
 import { getPointFromGeocodeResult } from "@/utils/utils";
+import { FormType } from "@/global.types";
 
-export function StartDate({
-  minDate,
-  label,
-  defaultValue,
-}: {
+type Props = {
   minDate: string;
   label: string;
   defaultValue?: string;
-}) {
+};
+
+export function StartDate({ minDate, label, defaultValue }: Props) {
   return (
     <div className="w-full">
       <Label htmlFor="start_date">{label}</Label>
@@ -128,14 +127,27 @@ export function TripName({
   );
 }
 
-export function CityCombobox({
-  label,
-
-  options,
-}: {
+type DestinationComboboxProps = {
   label: string;
   options: GeocodeSearchResult[];
-}) {
+  formType: FormType;
+  tripId?: Trip["id"];
+};
+
+function getRouterString(
+  formType: FormType,
+  value: string,
+  tripId?: Trip["id"]
+) {
+  return `/protected/trips/${formType === "edit" ? tripId + "/" : ""}${formType}?search=${value}`;
+}
+
+export function DestinationCombobox({
+  label,
+  options,
+  formType,
+  tripId,
+}: DestinationComboboxProps) {
   const searchParams = useSearchParams();
   const defaultValue = searchParams.get("search") || "Where are you going?";
   const router = useRouter();
@@ -144,7 +156,7 @@ export function CityCombobox({
   const [forceMount, setForceMount] = useState(false);
   const handleValueChange = useDebouncedCallback((value: string) => {
     setForceMount(false);
-    router.replace("/protected/trips/create?search=" + value);
+    router.replace(getRouterString(formType, value, tripId));
   }, 1000);
 
   useEffect(() => {

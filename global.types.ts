@@ -15,3 +15,4 @@ export type GeocodeSearchResult = {
     type: string;
     importance: number;
 }
+export type FormType = "create" | "edit";

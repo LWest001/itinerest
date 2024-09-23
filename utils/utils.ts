@@ -16,8 +16,7 @@ export function encodedRedirect(
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
-export function getPointFromGeocodeResult(result?: GeocodeSearchResult) {
-  if (!result) return null
+export function getPointFromGeocodeResult(result: GeocodeSearchResult) {
   return `POINT(${result.lon} ${result.lat})`
 }
 

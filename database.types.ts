@@ -81,8 +81,8 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
-          desination_coordinates: unknown | null
           destination: string
+          destination_coordinates: unknown | null
           end_date: string
           id: string
           lodging_coordinates: unknown | null
@@ -93,8 +93,8 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
-          desination_coordinates?: unknown | null
           destination: string
+          destination_coordinates?: unknown | null
           end_date: string
           id?: string
           lodging_coordinates?: unknown | null
@@ -105,8 +105,8 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
-          desination_coordinates?: unknown | null
           destination?: string
+          destination_coordinates?: unknown | null
           end_date?: string
           id?: string
           lodging_coordinates?: unknown | null

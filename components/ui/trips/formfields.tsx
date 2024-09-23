@@ -8,41 +8,51 @@ import {
   TripName,
 } from "./inputs";
 import { formatDate } from "@/lib/utils";
+import { getWktFromGeometry } from "@/lib/data";
 
 type Props = {
-  trip: Trip;
+  trip?: Trip;
   searchResults: any[];
   formType: FormType;
 };
-
-function FormFields({ trip, searchResults, formType }: Props) {
+async function FormFields({ trip, searchResults, formType }: Props) {
   const minDate = formatDate(new Date());
+  const isEdit = formType === "edit" && !!trip;
+  const point = await getWktFromGeometry(String(trip?.destination_coordinates));
 
   return (
     <>
       <TripName
         label="Trip name"
-        defaultValue={formType === "edit" ? trip.name : undefined}
+        defaultValue={isEdit ? trip.name : undefined}
       />
       {/* <City label="Trip location" defaultValue={trip?.destination} /> */}
       <DestinationCombobox
         options={searchResults}
         label="Destination"
-        tripId={trip.id}
+        tripId={isEdit ? trip.id : undefined}
         formType={formType}
+        defaultValues={
+          isEdit
+            ? {
+                destination: trip.destination,
+                destination_coordinates: point,
+              }
+            : undefined
+        }
       />
       <LodgingName
         label="Lodging"
-        defaultValue={formType === "edit" ? trip?.lodging_name : undefined}
+        defaultValue={isEdit ? trip?.lodging_name : undefined}
       />
       <StartDate
         minDate={minDate}
         label="Start date"
-        defaultValue={formType === "edit" ? trip?.start_date : undefined}
+        defaultValue={isEdit ? trip?.start_date : undefined}
       />
       <EndDate
         label="End date"
-        defaultValue={formType === "edit" ? trip?.end_date : undefined}
+        defaultValue={isEdit ? trip?.end_date : undefined}
       />
       <Submit type="submit">Save trip</Submit>
     </>

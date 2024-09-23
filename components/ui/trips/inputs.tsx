@@ -20,10 +20,9 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { GeocodeSearchResult, Trip } from "@/global.types";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { CommandLoading } from "cmdk";
 import { getPointFromGeocodeResult } from "@/utils/utils";
 import { FormType } from "@/global.types";
 
@@ -87,26 +86,6 @@ export function LodgingName({
   );
 }
 
-// export function City({
-//   label,
-//   defaultValue,
-// }: {
-//   label: string;
-//   defaultValue?: string;
-// }) {
-//   return (
-//     <div className="w-full">
-//       <Label htmlFor="destination">{label}</Label>
-//       <Input
-//         type="text"
-//         placeholder="City"
-//         name="destination"
-//         defaultValue={defaultValue}
-//       />
-//     </div>
-//   );
-// }
-
 export function TripName({
   label,
   defaultValue,
@@ -132,6 +111,10 @@ type DestinationComboboxProps = {
   options: GeocodeSearchResult[];
   formType: FormType;
   tripId?: Trip["id"];
+  defaultValues?: {
+    destination: Trip["destination"];
+    destination_coordinates: Trip["destination_coordinates"];
+  };
 };
 
 function getRouterString(
@@ -147,6 +130,7 @@ export function DestinationCombobox({
   options,
   formType,
   tripId,
+  defaultValues,
 }: DestinationComboboxProps) {
   const searchParams = useSearchParams();
   const defaultValue = searchParams.get("search") || "Where are you going?";
@@ -158,6 +142,12 @@ export function DestinationCombobox({
     setForceMount(false);
     router.replace(getRouterString(formType, value, tripId));
   }, 1000);
+
+  const selectedOption = options.find(
+    (option) => String(option.place_id) === String(value)
+  );
+
+  console.log(selectedOption);
 
   useEffect(() => {
     if (options.length) {
@@ -171,18 +161,19 @@ export function DestinationCombobox({
     <div className="w-full flex flex-col">
       <Label htmlFor="destination">{label}</Label>
       <Input
-        value={
-          options.find((option) => String(option.place_id) === String(value))
-            ?.display_name
+        defaultValue={
+          searchParams.size > 0
+            ? selectedOption?.display_name
+            : defaultValues?.destination
         }
         name="destination"
         className="hidden"
       />
       <Input
-        value={
-          getPointFromGeocodeResult(
-            options.find((option) => String(option.place_id) === String(value))
-          ) || ""
+        defaultValue={
+          searchParams.size > 0 && !!selectedOption
+            ? getPointFromGeocodeResult(selectedOption)
+            : String(defaultValues?.destination_coordinates || "")
         }
         name="destination_coordinates"
         className="hidden"
@@ -195,13 +186,13 @@ export function DestinationCombobox({
             aria-expanded={open}
             className=" justify-between text-wrap h-auto"
           >
-            {value
-              ? options.find(
-                  (option) => String(option.place_id) === String(value)
-                )?.display_name
+            {selectedOption
+              ? selectedOption?.display_name
               : options?.length
                 ? "Select option..."
-                : "Find your destination..."}
+                : defaultValues
+                  ? defaultValues.destination
+                  : "Find your destination..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

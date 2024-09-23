@@ -51,3 +51,18 @@ export async function searchLocation(searchTerm?: string) {
 
     return data.filter((result: any) => result.osm_type === "relation" || result.osm_type === "node"|| result.osm_type === "way") as GeocodeSearchResult[];
 }
+
+
+
+export async function getWktFromGeometry(geometry: string) {
+    const supabase = createClient();
+
+    const { data, error } = await supabase.rpc('get_wkt_from_geometry', { geometry });
+    
+    if (error) {
+        console.error('Error fetching WKT from geometry:', error);
+        return null;
+    }
+
+    return data;
+}

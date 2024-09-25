@@ -133,7 +133,6 @@ export const signOutAction = async () => {
 
 export const createTrip = async (formData: FormData) => {
   const supabase = createClient();
-  console.log(formData)
   let { data, error } = await supabase
     .from("trips")
     .insert([getTripsInsertionData(formData)])

@@ -5,6 +5,8 @@ import Link from "next/link";
 import "./globals.css";
 import { baskerville } from "@/components/ui/fonts";
 import HeaderAuth from "@/components/header-auth";
+import Image from "next/image";
+import icon from "@/app/icon.svg";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -39,7 +41,15 @@ export default async function RootLayout({ children }: Props) {
                       href={"/"}
                       className={`${baskerville.className} text-xl`}
                     >
-                      Itinerest
+                      <div className={"flex h-7 items-center gap-2"}>
+                        <Image
+                          src={icon}
+                          alt="Itinerest logo"
+                          style={{ height: "100%", width: "auto" }}
+                          quality={100}
+                        />
+                        Itinerest
+                      </div>
                     </Link>
                   </div>
                   <div className="flex gap-2">

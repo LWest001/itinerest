@@ -147,7 +147,6 @@ export function DestinationCombobox({
     (option) => String(option.place_id) === String(value)
   );
 
-  console.log(selectedOption);
 
   useEffect(() => {
     if (options.length) {

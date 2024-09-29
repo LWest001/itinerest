@@ -9,6 +9,7 @@ import {
 } from "../card";
 import { EditTrip } from "./buttons";
 import { ArrowRight, MapPin } from "lucide-react";
+import Link from "next/link";
 
 type Props = { trip: Trip };
 const monthNames = [
@@ -52,32 +53,32 @@ function TripCard({ trip }: Props) {
   const endDateMonth = new Date(end_date).getMonth();
 
   return (
-    <Card className="h-full flex flex-col justify-between gap-6 items-center shadow-border shadow-md">
-      <CardHeader className="select-none pt-0 flex-row justify-between p-0 items-start w-full">
-        <CardTitle className="pt-6 pl-6">{trip.name}</CardTitle>
-        <EditTrip id={trip.id} className="inline-block " />
-      </CardHeader>
-      <CardContent className="select-none flex flex-col gap-3 py-0 w-full">
-        <CardDescription className="text-md items-center gap-1 w-full">
-          <MapPin
-            className="min-w-8 float-left"
-            size={30}
-            fill="#f57470"
-            color="black"
-            strokeWidth={1}
-          />
-          <span>{getLocationString(trip.destination)}</span>
-        </CardDescription>
-      </CardContent>
-      <CardFooter>
-        <div className="flex gap-5 items-center">
-          <Calendar month={startDateMonth} date={startDateNum} />
-          <ArrowRight className="h-6 w-6" strokeWidth={3} />
-          <Calendar month={endDateMonth} date={endDateNum} />
-        </div>
-      </CardFooter>
-      {/* <CardFooter className="select-none"></CardFooter> */}
-    </Card>
+    <Link href={`/protected/trips/${trip.id}`}>
+      <Card className="h-full flex flex-col justify-between gap-6 items-center shadow-border shadow-md hover:shadow-none hover:cursor-pointer transition-shadow p-6">
+        <CardHeader className="select-none pt-0 flex-row p-0 w-full justify-center">
+          <CardTitle>{trip.name}</CardTitle>
+        </CardHeader>
+        <CardContent className="select-none flex flex-col gap-3 p-0 w-full">
+          <CardDescription className="text-md items-center gap-1 w-full p-0">
+            <MapPin
+              className="min-w-8 float-left"
+              size={30}
+              fill="#f57470"
+              color="black"
+              strokeWidth={1}
+            />
+            <span>{getLocationString(trip.destination)}</span>
+          </CardDescription>
+        </CardContent>
+        <CardFooter className="p-0">
+          <div className="flex gap-5 items-center select-none">
+            <Calendar month={startDateMonth} date={startDateNum} />
+            <ArrowRight className="h-6 w-6" strokeWidth={3} />
+            <Calendar month={endDateMonth} date={endDateNum} />
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
 

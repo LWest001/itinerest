@@ -1,7 +1,4 @@
-import Link from "next/link";
 import NavLinks from "@/components/ui/dashboard/nav-links";
-import { PowerIcon } from "lucide-react";
-import clsx from "clsx";
 
 export default function SideNav() {
   return (

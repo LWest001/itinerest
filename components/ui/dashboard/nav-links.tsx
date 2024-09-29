@@ -2,9 +2,8 @@
 
 import { GlobeEuropeAfricaIcon, HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { useTheme } from "next-themes";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -15,28 +14,21 @@ const links = [
 
 export default function NavLinks() {
   const pathname = usePathname();
-  const { theme } = useTheme();
 
   return (
     <>
       {links.map((link) => {
+        const isActive = pathname === link.href;
         const LinkIcon = link.icon;
+        const classNames = clsx({
+          "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-background p-3 text-sm font-medium  md:flex-none md:justify-start md:p-2 md:px-3 dark:hover:bg-slate-800 dark:hover:text-inherit hover:bg-sky-100 hover:text-blue-600":
+            true,
+          "dark:bg-slate-800 dark:text-inherit bg-sky-100 text-blue-600":
+            isActive,
+        });
+
         return (
-          <Link
-            key={link.name}
-            href={link.href}
-            className={clsx(
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-background p-3 text-sm font-medium  md:flex-none md:justify-start md:p-2 md:px-3",
-              {
-                "bg-slate-800 text-inherit":
-                  pathname === link.href && theme === "dark",
-                "hover:bg-slate-800 hover:text-inherit": theme === "dark",
-                "bg-sky-100 text-blue-600":
-                  pathname === link.href && theme === "light",
-                "hover:bg-sky-100 hover:text-blue-600": theme === "light",
-              }
-            )}
-          >
+          <Link key={link.name} href={link.href} className={classNames}>
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{link.name}</p>
           </Link>

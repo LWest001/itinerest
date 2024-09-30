@@ -161,7 +161,7 @@ export function DestinationCombobox({
   }, [options, search]);
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col gap-1">
       <Label htmlFor="destination">{label}</Label>
       <Input
         defaultValue={

@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../card";
-import { EditTrip } from "./buttons";
 import { ArrowRight, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -54,7 +53,7 @@ function TripCard({ trip }: Props) {
 
   return (
     <Link href={`/protected/trips/${trip.id}`}>
-      <Card className="h-full flex flex-col justify-between gap-6 items-center shadow-border shadow-md hover:shadow-none hover:cursor-pointer transition-shadow p-6">
+      <Card className="h-full flex flex-col justify-between gap-6 items-center hover:shadow-border hover:shadow-md cursor-pointer transition-shadow p-6">
         <CardHeader className="select-none pt-0 flex-row p-0 w-full justify-center">
           <CardTitle>{trip.name}</CardTitle>
         </CardHeader>

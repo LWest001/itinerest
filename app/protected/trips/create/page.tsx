@@ -22,9 +22,7 @@ type Props = {
 
 export default async function Form({ searchParams }: Props) {
   const minDate = formatDate(new Date());
-
   const searchResults = await searchLocation(searchParams?.search);
-
   return (
     <>
       <form

@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { getPointFromGeocodeResult } from "@/utils/utils";
 import { FormType } from "@/global.types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   minDate: string;
@@ -42,6 +43,7 @@ export function StartDate({ minDate, label, defaultValue }: Props) {
         name="start_date"
         min={minDate}
         defaultValue={defaultValue}
+        required
       />
     </div>
   );
@@ -61,6 +63,7 @@ export function EndDate({
         placeholder="end date"
         name="end_date"
         defaultValue={defaultValue}
+        required
       />
     </div>
   );
@@ -101,6 +104,7 @@ export function TripName({
         placeholder="New trip"
         name="name"
         defaultValue={defaultValue}
+        required
       />
     </div>
   );
@@ -133,28 +137,28 @@ export function DestinationCombobox({
   defaultValues,
 }: DestinationComboboxProps) {
   const searchParams = useSearchParams();
-  const defaultValue = searchParams.get("search") || "Where are you going?";
+  const search = searchParams.get("search");
+  const defaultValue = search || "Where are you going?";
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string>();
   const [forceMount, setForceMount] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const handleValueChange = useDebouncedCallback((value: string) => {
-    setForceMount(false);
     router.replace(getRouterString(formType, value, tripId));
   }, 1000);
 
   const selectedOption = options.find(
     (option) => String(option.place_id) === String(value)
   );
-
-
   useEffect(() => {
     if (options.length) {
       setForceMount(true);
     } else {
       setForceMount(false);
     }
-  }, [options]);
+    setIsPending(false);
+  }, [options, search]);
 
   return (
     <div className="w-full flex flex-col">
@@ -203,18 +207,26 @@ export function DestinationCombobox({
               name="destination"
               onValueChange={(s) => {
                 setForceMount(false);
+                setIsPending(s === "" ? false : true);
                 handleValueChange(s);
               }}
+              required
             />
 
-            <CommandList>
+            {isPending && (
+              <>
+                <Skeleton className="w-full h-9 mt-1" />
+              </>
+            )}
+            <CommandList className={cn({ hidden: !search?.length })}>
               <CommandEmpty
                 className={cn("py-6 text-center text-sm", {
-                  hidden: options?.length,
+                  hidden: options?.length || isPending,
                 })}
               >
                 No results found.
               </CommandEmpty>
+
               <CommandGroup forceMount={forceMount}>
                 {options.map((option) => (
                   <CommandItem

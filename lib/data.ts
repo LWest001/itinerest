@@ -47,9 +47,12 @@ export async function searchLocation(searchTerm?: string) {
         return [];
     }
     const response = await fetch(`https://geocode.maps.co/search?q=${searchTerm}&api_key=${process.env.GEOCODER_API_KEY}`);
-    const data = await response.json();
-
-    return data.filter((result: any) => result.osm_type === "relation" || result.osm_type === "node"|| result.osm_type === "way") as GeocodeSearchResult[];
+    if (response.ok) {
+        const data = await response.json();
+        return data?.filter((result: any) => result.osm_type === "relation" || result.osm_type === "node" || result.osm_type === "way") as GeocodeSearchResult[]
+    } else { 
+        return [];
+    }
 }
 
 

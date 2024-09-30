@@ -46,7 +46,7 @@ return (
     )}
     <div className="flex gap-2 items-center justify-center w-full max-w-sm">
       <Button asChild variant={"ghost"}>
-        <Link href={`/a/trips/${id}`}>Discard changes</Link>
+        <Link href={`/protected/trips/${id}`}>Discard changes</Link>
       </Button>
       <AlertDialog>
         <AlertDialogTrigger asChild>

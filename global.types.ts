@@ -16,3 +16,7 @@ export type GeocodeSearchResult = {
     importance: number;
 }
 export type FormType = "create" | "edit";
+export type Link = {
+    href: string;
+    label: string;
+}

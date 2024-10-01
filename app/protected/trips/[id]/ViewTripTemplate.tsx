@@ -7,8 +7,17 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/components/ui/breadcrumbs/breadcrumb";
 import { Trip } from "@/global.types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
 
 type Props = {
   trip: Trip | null;
@@ -18,30 +27,32 @@ function ViewTripTemplate({ trip }: Props) {
   return (
     trip && (
       <div className="flex flex-col">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/protected/trips">Trips</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <h1>{trip?.name}</h1>
-        <EditTrip id={trip?.id} />
-        <ul>
-          <li>{trip?.destination}</li>
-          <li>{trip?.lodging_name}</li>
-          <li>{trip?.start_date}</li>
-          <li>{trip?.end_date}</li>
-        </ul>
+        <Breadcrumbs
+          links={[
+            { href: "/protected", label: "Home" },
+            { href: "/protected/trips", label: "Trips" },
+            { href: `/protected/${trip.id}`, label: trip.name },
+          ]}
+        />
+        <Card>
+          <CardHeader>
+            <CardTitle>{trip?.name}</CardTitle>
+            <EditTrip id={trip?.id} />
+            <CardDescription>{trip?.destination}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul>
+              <li>{trip?.lodging_name}</li>
+              <li>{trip?.start_date}</li>
+              <li>{trip?.end_date}</li>
+            </ul>
+          </CardContent>
+          <CardFooter>
+            <div className="text-xs text-muted-foreground">
+              Showing <strong>1-10</strong> of <strong>32</strong> products
+            </div>
+          </CardFooter>
+        </Card>
       </div>
     )
   );

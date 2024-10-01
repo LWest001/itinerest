@@ -27,14 +27,15 @@ export function EditTrip({
   className?: string;
 }) {
   return (
-    <Link
-      href={`/protected/trips/${id}/edit`}
-      className={
-        "rounded-bl-lg z-10 h-8 w-8 flex place-items-center justify-center hover:bg-gray-700 !mt-0 " +
-        className
-      }
+    <Button
+      asChild
+      variant={"link"}
+      className="text-foreground hover:no-underline"
     >
-      <Pencil className=" text-slate-200 h-4" />
-    </Link>
+      <Link href={`/protected/trips/${id}/edit`} className="justify-between">
+        Edit
+        <Pencil className="h-4" />
+      </Link>
+    </Button>
   );
 }

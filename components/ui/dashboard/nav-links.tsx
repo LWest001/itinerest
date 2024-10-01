@@ -3,13 +3,14 @@
 import { GlobeEuropeAfricaIcon, HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
+import { cn } from "@/lib/utils";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: "Home", href: "/protected", icon: HomeIcon },
-  { name: "Trips", href: "/protected/trips", icon: GlobeEuropeAfricaIcon },
+  { label: "Home", href: "/protected", icon: HomeIcon },
+  { label: "Trips", href: "/protected/trips", icon: GlobeEuropeAfricaIcon },
 ];
 
 export default function NavLinks() {
@@ -19,21 +20,26 @@ export default function NavLinks() {
     <>
       {links.map((link) => {
         const isActive = pathname === link.href;
-        const LinkIcon = link.icon;
 
         return (
-          <Link
-            key={link.name}
-            href={link.href}
-            className={clsx({
-              "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-background p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3 hover:bg-secondary transition-colors dark:hover:text-inherit hover:text-blue-600":
-                true,
-              "bg-secondary": isActive,
-            })}
-          >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
-          </Link>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href={link.href}
+                className={cn(
+                  "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
+                  {
+                    "bg-accent text-accent-foreground transition-colors":
+                      isActive,
+                  }
+                )}
+              >
+                <link.icon className="h-5 w-5" />
+                <span className="sr-only">{link.label}</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">{link.label}</TooltipContent>
+          </Tooltip>
         );
       })}
     </>

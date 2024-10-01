@@ -1,12 +1,46 @@
 import NavLinks from "@/components/ui/dashboard/nav-links";
+import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { LogOut, Settings } from "lucide-react";
+import Link from "next/link";
+import { TooltipContent, TooltipProvider } from "../tooltip";
+import { signOutAction } from "@/app/actions";
 
 export default function SideNav() {
   return (
-    <div className="flex h-full flex-col px-3 py-4 md:px-2 ">
-      <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2 ">
-        <NavLinks />
-        <div className="hidden h-auto w-full grow rounded-md md:block"></div>
-      </div>
-    </div>
+    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+      <TooltipProvider delayDuration={0}>
+        <nav className="flex flex-col items-center gap-4 px-2 py-4">
+          <NavLinks />
+        </nav>
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Settings</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <form action={signOutAction}>
+                <button
+                  type="submit"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">Sign out</span>
+                </button>
+              </form>
+            </TooltipTrigger>
+            <TooltipContent side="right">Sign out</TooltipContent>
+          </Tooltip>
+        </nav>
+      </TooltipProvider>
+    </aside>
   );
 }

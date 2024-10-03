@@ -9,7 +9,9 @@ function Layout({ children }: Props) {
         <SideNav />
       </div>
       <div className="flex-grow sm:pl-14 overflow-x-hidden min-h-max">
-        {children}
+        <div className="flex min-h-screen flex-col bg-muted/40 max-w-full sm:m-4 sm:rounded-md p-4">
+          {children}
+        </div>
       </div>
     </div>
   );

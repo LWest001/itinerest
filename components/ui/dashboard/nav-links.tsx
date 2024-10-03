@@ -6,8 +6,6 @@ import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 import { cn } from "@/lib/utils";
 
-// Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
 const links = [
   { label: "Home", href: "/protected", icon: HomeIcon },
   { label: "Trips", href: "/protected/trips", icon: GlobeEuropeAfricaIcon },
@@ -44,4 +42,16 @@ export default function NavLinks() {
       })}
     </>
   );
+}
+
+export function NavLinksMobile() {
+  return links.map((link) => (
+    <Link
+      href={link.href}
+      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+    >
+      <link.icon className="h-5 w-5" />
+      <span>{link.label}</span>
+    </Link>
+  ));
 }

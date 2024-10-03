@@ -6,12 +6,11 @@ import {
   Carousel,
   CarouselApi,
   CarouselContent,
-  CarouselDotNavigation,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "../carousel";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { CreateTrip } from "./buttons";
 
@@ -69,7 +68,7 @@ function TripLinks({ trips }: Props) {
           {trips.map((trip) => (
             <CarouselItem
               key={trip.id}
-              className={clsx("sm:basis-1/2 first-of-type:pl-0", {
+              className={clsx("aspect-square sm:basis-1/2 first-of-type:pl-0", {
                 "lg:basis-1/3": trips.length > 2,
                 "xl:basis-1/4": trips.length > 3,
               })}

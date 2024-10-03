@@ -7,9 +7,9 @@ import { signOutAction } from "@/app/actions";
 
 export default function SideNav() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <aside className="fixed inset-y-0 left-0 top-16 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <TooltipProvider delayDuration={0}>
-        <nav className="flex flex-col items-center gap-4 px-2 py-4">
+        <nav className="flex flex-col items-center gap-4 px-2 py-4 ">
           <NavLinks />
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">

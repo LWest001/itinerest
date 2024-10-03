@@ -22,7 +22,7 @@ export default function NavLinks() {
         const isActive = pathname === link.href;
 
         return (
-          <Tooltip>
+          <Tooltip key={link.href}>
             <TooltipTrigger asChild>
               <Link
                 href={link.href}

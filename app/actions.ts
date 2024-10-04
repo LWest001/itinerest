@@ -140,7 +140,7 @@ export const createTrip = async (formData: FormData) => {
   if (!error) {
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
-    redirect("/protected/trips");
+    redirect(data ? "/protected/trips/"+ data[0].id : "/protected/trips");
   } else {
     console.error(error);
   }
@@ -156,7 +156,7 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
   if (!error) {    
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
-    redirect("/protected/trips");
+    redirect("/protected/trips/"+id);
   } else {
     console.error(error);
   }

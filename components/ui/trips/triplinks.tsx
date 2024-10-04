@@ -62,7 +62,7 @@ function TripLinks({ trips }: Props) {
   }, [api]);
 
   return (
-    <div className="max-w-full w-full">
+    <div className="w-full max-w-">
       <Carousel setApi={setApi} opts={{ duration: 20 }} className="w-full">
         <CarouselContent className="p-3">
           {trips.map((trip) => (

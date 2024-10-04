@@ -8,8 +8,8 @@ function Layout({ children }: Props) {
       <div className="w-fit flex-none">
         <SideNav />
       </div>
-      <div className="flex-grow sm:pl-14 overflow-x-hidden min-h-max">
-        <div className="flex min-h-screen flex-col bg-muted/40 max-w-full sm:m-4 sm:rounded-md p-4">
+      <div className="flex-grow sm:pl-[4.5rem] sm:pr-4 overflow-x-hidden min-h-max flex justify-center max-w-screen-xl md:mx-auto">
+        <div className="flex flex-col bg-muted/40  max-w-full sm:m-4 sm:rounded-md p-4 w-screen !mx-0">
           {children}
         </div>
       </div>

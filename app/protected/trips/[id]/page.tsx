@@ -9,6 +9,7 @@ type Props = {
 
 async function ViewTrip({ params }: Props) {
   const trip = await getTripById(params.id);
+
   return <ViewTripTemplate trip={trip} />;
 }
 

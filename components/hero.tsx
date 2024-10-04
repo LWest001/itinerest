@@ -2,7 +2,7 @@ import { baskerville } from "./ui/fonts";
 
 export default function Header() {
   return (
-    <div className="flex flex-col gap-16 items-center">
+    <div className="flex flex-col gap-16 items-center w-full justify-center">
       <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
         Plan your next vacation with{" "}
         <a

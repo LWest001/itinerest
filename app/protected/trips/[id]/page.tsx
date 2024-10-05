@@ -9,7 +9,9 @@ type Props = {
 
 async function ViewTrip({ params }: Props) {
   const trip = await getTripById(params.id);
-  const collaborators = trip ? await getUsersByIds(trip?.collaborators) : [];
+  const collaborators = trip
+    ? await getUsersByIds(trip?.collaborators, true)
+    : [];
   return <ViewTripTemplate trip={trip} collaborators={collaborators} />;
 }
 

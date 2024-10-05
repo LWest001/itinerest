@@ -71,10 +71,15 @@ export async function getWktFromGeometry(geometry: string) {
     return data;
 }
 
-export async function getUsersByIds(ids: string[] | null) {
+export async function getUsersByIds(ids: string[] | null, excludeCurrentUser = false) {
     const supabase = createClient();
     if (!ids) {
         return [];
+    }
+
+    if (excludeCurrentUser) {
+        const currentUser = await getUser();
+        ids = ids.filter(id => id !== currentUser?.id);
     }
 
     const { data, error } = await supabase

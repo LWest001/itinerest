@@ -1,5 +1,5 @@
 import NavLinks, { NavLinksMobile } from "@/components/ui/dashboard/nav-links";
-import { Tooltip, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
 import { LogOut, PanelLeft, Settings } from "lucide-react";
 import Link from "next/link";
 import { TooltipContent, TooltipProvider } from "../tooltip";

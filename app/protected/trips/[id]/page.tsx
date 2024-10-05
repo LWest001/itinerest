@@ -1,4 +1,4 @@
-import { getTripById } from "@/lib/data";
+import { getTripById, getUsersByIds } from "@/lib/data";
 import ViewTripTemplate from "./ViewTripTemplate";
 
 type Props = {
@@ -9,7 +9,8 @@ type Props = {
 
 async function ViewTrip({ params }: Props) {
   const trip = await getTripById(params.id);
-  return <ViewTripTemplate trip={trip} />;
+  const collaborators = trip ? await getUsersByIds(trip?.collaborators) : [];
+  return <ViewTripTemplate trip={trip} collaborators={collaborators} />;
 }
 
 export default ViewTrip;

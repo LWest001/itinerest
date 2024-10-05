@@ -53,6 +53,44 @@ export type Database = {
           },
         ]
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+          username: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spatial_ref_sys: {
         Row: {
           auth_name: string | null
@@ -79,6 +117,7 @@ export type Database = {
       }
       trips: {
         Row: {
+          collaborators: string[] | null
           created_at: string
           created_by: string | null
           destination: string
@@ -91,6 +130,7 @@ export type Database = {
           start_date: string
         }
         Insert: {
+          collaborators?: string[] | null
           created_at?: string
           created_by?: string | null
           destination: string
@@ -103,6 +143,7 @@ export type Database = {
           start_date: string
         }
         Update: {
+          collaborators?: string[] | null
           created_at?: string
           created_by?: string | null
           destination?: string
@@ -611,6 +652,12 @@ export type Database = {
         }
         Returns: unknown
       }
+      geom_as_wkt: {
+        Args: {
+          "": unknown
+        }
+        Returns: string
+      }
       geometry:
         | {
             Args: {
@@ -958,6 +1005,12 @@ export type Database = {
       get_proj4_from_srid: {
         Args: {
           "": number
+        }
+        Returns: string
+      }
+      get_wkt_from_geometry: {
+        Args: {
+          geometry: string
         }
         Returns: string
       }

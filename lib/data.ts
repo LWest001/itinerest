@@ -28,6 +28,7 @@ export async function getAllTrips() {
 
 export async function getTripById(tripId: string) {
     const supabase = createClient();
+    
     const { data, error } = await supabase
         .from('trips')
         .select('*')
@@ -68,4 +69,21 @@ export async function getWktFromGeometry(geometry: string) {
     }
 
     return data;
+}
+
+export async function getUsersByIds(ids: string[] | null) {
+    const supabase = createClient();
+    if (!ids) {
+        return [];
+    }
+
+    const { data, error } = await supabase
+        .from('profiles').select('*').in('id', ids);
+
+    if (error) {
+        console.error('Error fetching users:', error);
+        return [];
+    }
+
+    return data as User[];
 }

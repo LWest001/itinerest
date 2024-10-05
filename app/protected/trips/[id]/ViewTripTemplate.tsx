@@ -14,66 +14,87 @@ import Image from "next/image";
 import CalendarBox from "@/components/ui/calendar-box";
 import Link from "next/link";
 import { EditTrip } from "@/components/ui/trips/buttons";
+import { Suspense } from "react";
+import Loading from "./loading";
+import { User } from "@supabase/supabase-js";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 type Props = {
   trip: Trip | null;
+  collaborators: User[];
 };
 
-function ViewTripTemplate({ trip }: Props) {
+function ViewTripTemplate({ trip, collaborators }: Props) {
   const startDateNum = new Date(trip?.start_date + "\n").getDate();
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
   const endDateMonth = new Date(trip?.end_date + "\n").getMonth();
 
   return (
-    trip && (
-      <div className="flex flex-col sm:gap-4 w-full ">
-        <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
-          <Breadcrumbs
-            links={[
-              { href: "/protected", label: "Home" },
-              { href: "/protected/trips", label: "Trips" },
-              { href: `/protected/trips/${trip.id}`, label: trip.name },
-            ]}
-          />
-        </div>
-        <div className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="icon" className="h-7 w-7" asChild>
-                <Link href={"/protected/trips"}>
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="sr-only">Back</span>
-                </Link>
-              </Button>
-              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight text-wrap">
-                {trip.name}
-              </h1>
-              {/* <Badge variant="outline" className="ml-auto sm:ml-0">
+    <Suspense fallback={<Loading />}>
+      {trip && (
+        <div className="flex flex-col sm:gap-4 w-full ">
+          <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
+            <Breadcrumbs
+              links={[
+                { href: "/protected", label: "Home" },
+                { href: "/protected/trips", label: "Trips" },
+                { href: `/protected/trips/${trip.id}`, label: trip.name },
+              ]}
+            />
+          </div>
+          <div className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
+            <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-7 w-7"
+                  asChild
+                >
+                  <Link href={"/protected/trips"}>
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Back</span>
+                  </Link>
+                </Button>
+                <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight text-wrap">
+                  {trip.name}
+                </h1>
+                {/* <Badge variant="outline" className="ml-auto sm:ml-0">
                   In stock
                 </Badge> */}
-              <div className="flex items-center gap-2 ml-auto">
-                <EditTrip id={trip.id} />
-                {/* <Button variant="outline" size="sm">
+                <div className="flex items-center gap-2 ml-auto">
+                  <EditTrip id={trip.id} />
+                  {/* <Button variant="outline" size="sm">
                     Discard
                   </Button> */}
-                {/* <Button size="sm">Save Product</Button> */}
+                  {/* <Button size="sm">Save Product</Button> */}
+                </div>
               </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-              <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Trip Details</CardTitle>
-                    <CardDescription>{trip.destination}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex gap-5 items-center select-none">
-                      <CalendarBox month={startDateMonth} date={startDateNum} />
-                      <ArrowRight className="h-6 w-6" strokeWidth={3} />
-                      <CalendarBox month={endDateMonth} date={endDateNum} />
-                    </div>
-                    {/* <div className="grid gap-6">
+              <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+                <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Trip Details</CardTitle>
+                      <CardDescription>{trip.destination}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex gap-5 items-center select-none">
+                        <CalendarBox
+                          month={startDateMonth}
+                          date={startDateNum}
+                        />
+                        <ArrowRight className="h-6 w-6" strokeWidth={3} />
+                        <CalendarBox month={endDateMonth} date={endDateNum} />
+                      </div>
+                      {/* <div className="grid gap-6">
                         <div className="grid gap-3">
                           <Label htmlFor="name">Name</Label>
                           <Input
@@ -92,15 +113,15 @@ function ViewTripTemplate({ trip }: Props) {
                           />
                         </div>
                       </div> */}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lodging</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {trip.lodging_name}
-                    {/* <div className="grid gap-6 sm:grid-cols-3">
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Lodging</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {trip.lodging_name}
+                      {/* <div className="grid gap-6 sm:grid-cols-3">
                         <div className="grid gap-3">
                           <Label htmlFor="category">Category</Label>
                           <Select>
@@ -142,60 +163,44 @@ function ViewTripTemplate({ trip }: Props) {
                           </Select>
                         </div>
                       </div> */}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Activities</CardTitle>
-                    <CardDescription>
-                      Lipsum dolor sit amet, consectetur adipiscing elit
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent></CardContent>
-                  <CardFooter className="justify-center border-t p-4">
-                    <Button size="sm" variant="ghost" className="gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      Add Activity
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
-              <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                <Card x-chunk="dashboard-07-chunk-3">
-                  <CardHeader>
-                    <CardTitle>Collaborators</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-2 grid-cols-3">
-                      <button>
-                        <Image
-                          alt="Product image"
-                          className="aspect-square w-full rounded-md object-cover"
-                          height="84"
-                          src="/placeholder.svg"
-                          width="84"
-                        />
-                      </button>
-                      <button>
-                        <Image
-                          alt="Product image"
-                          className="aspect-square w-full rounded-md object-cover"
-                          height="84"
-                          src="/placeholder.svg"
-                          width="84"
-                        />
-                      </button>
-                      <button>
-                        <Image
-                          alt="Product image"
-                          className="aspect-square w-full rounded-md object-cover"
-                          height="84"
-                          src="/placeholder.svg"
-                          width="84"
-                        />
-                      </button>
-                    </div>
-                    {/* <div className="grid gap-6">
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Activities</CardTitle>
+                      <CardDescription>
+                        Lipsum dolor sit amet, consectetur adipiscing elit
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent></CardContent>
+                    <CardFooter className="justify-center border-t p-4">
+                      <Button size="sm" variant="ghost" className="gap-1">
+                        <PlusCircle className="h-3.5 w-3.5" />
+                        Add Activity
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </div>
+                <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                  <Card x-chunk="dashboard-07-chunk-3">
+                    <CardHeader>
+                      <CardTitle>Collaborators</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div
+                        className={cn(
+                          collaborators.length && "grid gap-2 grid-cols-3"
+                        )}
+                      >
+                        {collaborators.length ? (
+                          collaborators?.map((user) => (
+                            <Collaborator key={user.id} user={user} />
+                          ))
+                        ) : (
+                          <p>Invite some travel buddies!</p>
+                        )}
+                      </div>
+                      {/* <div className="grid gap-6">
                         <div className="grid gap-3">
                           <Label htmlFor="status">Status</Label>
                           <Select>
@@ -210,62 +215,85 @@ function ViewTripTemplate({ trip }: Props) {
                           </Select>
                         </div>
                       </div> */}
-                  </CardContent>
-                  <CardFooter className="justify-center border-t p-4">
-                    <Button size="sm" variant="ghost" className="gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      Invite
-                    </Button>
-                  </CardFooter>
-                </Card>
-                <Card className="overflow-hidden">
-                  <CardHeader>
-                    <CardTitle>Trip Map</CardTitle>
-                    <CardDescription>
-                      Lipsum dolor sit amet, consectetur adipiscing elit
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-2">
-                      <button>
-                        <Image
-                          alt="Product image"
-                          className="aspect-square w-full rounded-md object-cover"
-                          height="300"
-                          src="/placeholder.svg"
-                          width="300"
-                        />
-                      </button>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Remove Trip</CardTitle>
-                    <CardDescription>
-                      You will no longer be a collaborator on this trip. Others
-                      will still be able to access it.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div></div>
-                    <Button size="sm" variant="destructive">
-                      Remove Trip
-                    </Button>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                    <CardFooter className="justify-center border-t p-4">
+                      <Button size="sm" variant="ghost" className="gap-1">
+                        <PlusCircle className="h-3.5 w-3.5" />
+                        Invite
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                  <Card className="overflow-hidden">
+                    <CardHeader>
+                      <CardTitle>Trip Map</CardTitle>
+                      <CardDescription>
+                        Lipsum dolor sit amet, consectetur adipiscing elit
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid gap-2">
+                        <button>
+                          <Image
+                            alt="Product image"
+                            className="aspect-square w-full rounded-md object-cover"
+                            height="300"
+                            src="/placeholder.svg"
+                            width="300"
+                            priority
+                          />
+                        </button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Remove Trip</CardTitle>
+                      <CardDescription>
+                        You will no longer be a collaborator on this trip.
+                        Others will still be able to access it.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div></div>
+                      <Button size="sm" variant="destructive">
+                        Remove Trip
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
-                Discard
-              </Button>
-              <Button size="sm">Save Product</Button>
+              <div className="flex items-center justify-center gap-2 md:hidden">
+                <Button variant="outline" size="sm">
+                  Discard
+                </Button>
+                <Button size="sm">Save Product</Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )
+      )}
+    </Suspense>
+  );
+}
+
+function Collaborator({ user }: { user: User }) {
+  return (
+    <TooltipProvider>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger>
+          <Avatar>
+            <AvatarImage
+              alt="Profile image"
+              src={user.user_metadata?.avatar_url}
+            />
+            <AvatarFallback>
+              {user?.email ? user?.email[0].toUpperCase() : "?"}
+            </AvatarFallback>
+          </Avatar>
+        </TooltipTrigger>
+        <TooltipContent>{user?.email && user?.email}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 

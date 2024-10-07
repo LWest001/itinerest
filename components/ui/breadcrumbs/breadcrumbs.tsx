@@ -7,6 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumbs/breadcrumb";
 import { Link } from "@/global.types";
+import NextLink from "next/link";
 import { Fragment } from "react";
 
 function Breadcrumbs({ links }: { links: Link[] }) {
@@ -16,7 +17,9 @@ function Breadcrumbs({ links }: { links: Link[] }) {
         {links.map((link, index) => (
           <Fragment key={link.href}>
             <BreadcrumbItem>
-              <BreadcrumbLink href={link.href}>{link.label}</BreadcrumbLink>
+              <BreadcrumbLink asChild>
+                <NextLink href={link.href}>{link.label}</NextLink>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             {index < links.length - 1 && <BreadcrumbSeparator />}
           </Fragment>

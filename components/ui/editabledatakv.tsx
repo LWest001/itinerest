@@ -28,6 +28,14 @@ function EditableDataKV({ property, value }: Props) {
     e.preventDefault();
     push(`${pathname}?edit=${property}&newValue=${e.target.value}`);
   }
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    path: string
+  ) => {
+    e.preventDefault();
+    push(path);
+  };
+
   return (
     <form className="flex w-full justify-between items-center">
       <div className="flex flex-col gap-1">
@@ -49,41 +57,65 @@ function EditableDataKV({ property, value }: Props) {
       </div>
       {isEditing ? (
         <div className="flex gap-1">
-          <Button
-            variant={"ghost"}
-            onClick={(e) => {
-              e.preventDefault();
-              push(`${pathname}?edit=${property}`);
-            }}
-            className="aspect-square p-0 w-8 h-8"
-          >
-            <Check className="h-4 w-4 text-primary" />
-          </Button>
-          <Button
-            variant={"ghost"}
-            onClick={(e) => {
-              e.preventDefault();
-              push(`${pathname}`);
-            }}
-            className="aspect-square p-0 w-8 h-8"
-          >
-            <X className="h-4 w-4 text-muted-foreground" />
-          </Button>
+          <SaveButton onClick={(e) => handleClick(e, `${pathname}`)} />
+          <CancelButton onClick={(e) => handleClick(e, pathname)} />
         </div>
       ) : (
-        <Button
-          variant={"ghost"}
-          onClick={(e) => {
-            e.preventDefault();
-            push(`${pathname}?edit=${property}`);
-          }}
-          className="aspect-square p-0 w-8 h-8"
-        >
-          <Edit className="h-4 w-4 text-primary" />
-        </Button>
+        <EditButton
+          onClick={(e) => handleClick(e, `${pathname}?edit=${property}`)}
+        />
       )}
     </form>
   );
 }
 
 export default EditableDataKV;
+
+function SaveButton({
+  onClick,
+}: {
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) {
+  return (
+    <Button
+      variant={"ghost"}
+      onClick={onClick}
+      className="aspect-square p-0 w-8 h-8"
+    >
+      <Check className="h-4 w-4 text-primary" />
+    </Button>
+  );
+}
+
+function CancelButton({
+  onClick,
+}: {
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) {
+  return (
+    <Button
+      variant={"ghost"}
+      onClick={onClick}
+      className="aspect-square p-0 w-8 h-8"
+    >
+      <X className="h-4 w-4 text-muted-foreground" />
+    </Button>
+  );
+}
+
+function EditButton({
+  onClick,
+}: {
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) {
+  return (
+    <Button
+      variant={"ghost"}
+      onClick={onClick}
+      className="aspect-square p-0 w-8 h-8"
+    >
+      <Edit className="h-4 w-4 text-primary" />
+    </Button>
+  );
+}
+

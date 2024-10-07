@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Profile } from "@/global.types";
 import EditableDataKV from "@/components/ui/editabledatakv";
+import Loading from "./loading";
 
 type Props = {
   user: Profile | null;
@@ -21,7 +22,7 @@ type Props = {
 
 function AccountSettingsTemplate({ user }: Props) {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
         <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
           <Breadcrumbs

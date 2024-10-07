@@ -1,4 +1,4 @@
-import { Trip } from "@/global.types";
+import { Profile, Trip } from "@/global.types";
 import {
   Card,
   CardContent,
@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   trip: Trip | null;
-  collaborators: User[];
+  collaborators: Profile[];
 };
 
 function ViewTripTemplate({ trip, collaborators }: Props) {
@@ -276,7 +276,7 @@ function ViewTripTemplate({ trip, collaborators }: Props) {
   );
 }
 
-function Collaborator({ user }: { user: User }) {
+function Collaborator({ user }: { user: Profile }) {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={0}>
@@ -284,10 +284,10 @@ function Collaborator({ user }: { user: User }) {
           <Avatar>
             <AvatarImage
               alt="Profile image"
-              src={user.user_metadata?.avatar_url}
+              src={user.avatar_url || undefined}
             />
             <AvatarFallback>
-              {user?.email ? user?.email[0].toUpperCase() : "?"}
+              {user?.username ? user?.username[0].toUpperCase() : "?"}
             </AvatarFallback>
           </Avatar>
         </TooltipTrigger>

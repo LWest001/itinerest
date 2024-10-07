@@ -193,6 +193,7 @@ export const updateProfile = async (formData: FormData) => {
     .eq("id", id);
 
   if (!error) {
+    revalidatePath("/protected/settings");
     redirect("/protected/settings");
   } else {
     console.error(error);

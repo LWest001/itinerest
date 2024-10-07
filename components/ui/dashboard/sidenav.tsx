@@ -69,7 +69,7 @@ export function SideNavMobile() {
               src={icon}
               alt="Itinerest logo"
             />
-            <span className="sr-only">Acme Inc</span>
+            <span className="sr-only">Itinerest</span>
           </Link>
           <NavLinksMobile />
         </nav>

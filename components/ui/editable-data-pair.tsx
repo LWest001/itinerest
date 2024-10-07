@@ -68,6 +68,7 @@ function SaveButton() {
   return (
     <Button variant={"ghost"} className={buttonStyles}>
       <Check className="h-4 w-4 text-primary" />
+      <span className="sr-only">Save changes</span>
     </Button>
   );
 }
@@ -77,15 +78,17 @@ function CancelButton() {
   return (
     <Link className={linkButtonStyles} href={pathname}>
       <X className="h-4 w-4 text-muted-foreground" />
+      <span className="sr-only">Cancel changes</span>
     </Link>
   );
 }
 
-function EditButton({ property }: { property: string }) {
+export function EditButton({ property }: { property: string }) {
   const pathname = usePathname();
   return (
     <Link className={linkButtonStyles} href={`${pathname}?edit=${property}`}>
       <Edit className="h-4 w-4 text-primary" />
+      <span className="sr-only">Edit {property}</span>
     </Link>
   );
 }

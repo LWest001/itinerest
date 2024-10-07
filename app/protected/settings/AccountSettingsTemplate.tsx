@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
-import { ChevronLeft, PlusCircle } from "lucide-react";
+import { ChevronLeft, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import { Profile } from "@/global.types";
 import EditableDataPair from "@/components/ui/editable-data-pair";
 import Loading from "./loading";
 import { updateProfile } from "@/app/actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
   user: Profile | null;
@@ -48,21 +49,49 @@ function AccountSettingsTemplate({ user }: Props) {
             </div>
             <div className="grid gap-4  md:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 md:col-span-2 lg:gap-8">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Account</CardTitle>
-                    <CardDescription></CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form action={updateProfile}>
-                      <div className="flex flex-col gap-3">
-                        <EditableDataPair
-                          property="Display name"
-                          value={user?.username || ""}
+                <Card className="p-4 bg-secondary">
+                  <div className="flex items-center gap-5 mb-4">
+                    <div className="w-fit ">
+                      <Avatar className="w-16 h-16 ">
+                        <AvatarImage
+                          alt="Profile image"
+                          src={user?.avatar_url || undefined}
                         />
+                        <AvatarFallback>
+                          {user?.username
+                            ? user?.username[0].toUpperCase()
+                            : "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="relative h-0 w-0 p-0 m-0 ml-auto right-4">
+                        <Button
+                          className="h-5 w-5 absolute bottom-0 left-0 rounded-full border-none"
+                          size="icon"
+                        >
+                          <Plus />
+                        </Button>
                       </div>
-                    </form>
-                  </CardContent>
+                    </div>
+                    <span className="text-xl font-semibold">
+                      {user?.username}
+                    </span>
+                  </div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Account</CardTitle>
+                      <CardDescription></CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form action={updateProfile}>
+                        <div className="flex flex-col gap-3">
+                          <EditableDataPair
+                            property="Display name"
+                            value={user?.username || ""}
+                          />
+                        </div>
+                      </form>
+                    </CardContent>
+                  </Card>
                 </Card>
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">

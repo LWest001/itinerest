@@ -16,7 +16,6 @@ import Link from "next/link";
 import { EditTrip } from "@/components/ui/trips/buttons";
 import { Suspense } from "react";
 import Loading from "./loading";
-import { User } from "@supabase/supabase-js";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   TooltipProvider,
@@ -72,10 +71,6 @@ function ViewTripTemplate({ trip, collaborators }: Props) {
                 </Badge> */}
                 <div className="flex items-center gap-2 ml-auto">
                   <EditTrip id={trip.id} />
-                  {/* <Button variant="outline" size="sm">
-                    Discard
-                  </Button> */}
-                  {/* <Button size="sm">Save Product</Button> */}
                 </div>
               </div>
               <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">

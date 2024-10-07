@@ -1,6 +1,7 @@
 import { Database, Tables } from "./database.types";
 
 export type Trip = Tables<'trips'>
+export type Profile = Tables<'profiles'>
 export type Activity = Tables<'activities'>
 export type GeocodeSearchResult = {
     place_id: string;

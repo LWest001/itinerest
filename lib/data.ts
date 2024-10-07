@@ -1,4 +1,4 @@
-import { GeocodeSearchResult, Trip } from "@/global.types";
+import { GeocodeSearchResult, Profile, Trip } from "@/global.types";
 import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 
@@ -91,4 +91,25 @@ export async function getUsersByIds(ids: string[] | null, excludeCurrentUser = f
     }
 
     return data as User[];
+}
+
+export async function getUserProfile() {
+    const user = await getUser();
+    if (!user) {
+        return null;
+    }
+    const {id} = user;
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+    }
+
+    return data as Profile;
 }

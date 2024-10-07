@@ -131,6 +131,8 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
+/********* TRIP ACTIONS *********/
+
 export const createTrip = async (formData: FormData) => {
   const supabase = createClient();
   let { data, error } = await supabase
@@ -176,3 +178,23 @@ export const deleteTrip = async (id: Trip["id"]) => {
     console.error(error);
   }
 }
+
+/********* PROFILE ACTIONS *********/
+
+export const updateProfile = async (formData: FormData) => {
+  const supabase = createClient();
+  const user = await supabase.auth.getUser()
+  const id = user.data.user?.id
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({
+      username: formData.get("username")?.toString(),
+    })
+    .eq("id", id);
+
+  if (!error) {
+    redirect("/protected/settings");
+  } else {
+    console.error(error);
+  }
+};

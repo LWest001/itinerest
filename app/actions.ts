@@ -256,8 +256,6 @@ export const uploadAvatar = async (formData: FormData) => {
     } else {
       console.error(error);
     }
-
-    return { data, error };
   }
 };
 

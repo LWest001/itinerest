@@ -16,10 +16,11 @@ import { Suspense } from "react";
 import { Profile } from "@/global.types";
 import EditableDataPair from "@/components/ui/editable-data-pair";
 import Loading from "./loading";
-import { updateProfile, uploadAvatar } from "@/app/actions";
+import { updateProfile } from "@/app/actions";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import UploadButton from "@/components/ui/upload-button";
+import UploadButton from "@/components/ui/upload-button/upload-button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   user: Profile | null;
@@ -67,10 +68,7 @@ async function AccountSettingsTemplate({ user }: Props) {
                             : "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <form action={uploadAvatar}>
-                        <UploadButton />
-                        <input type="submit" value="Upload" />
-                      </form>
+                      <UploadButton />
                     </div>
                     <span className="text-xl font-semibold">
                       {user?.username}

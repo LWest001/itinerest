@@ -1,12 +1,16 @@
 "use server";
 
-import { encodedRedirect, getTripsInsertionData } from "@/utils/utils";
+import {
+  encodedRedirect,
+  getFilename,
+  getTripsInsertionData,
+} from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { Trip } from "@/global.types";
-
+import { getUser } from "@/lib/data";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
@@ -32,7 +36,7 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "success",
       "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "Thanks for signing up! Please check your email for a verification link."
     );
   }
 };
@@ -73,7 +77,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/forgot-password",
-      "Could not reset password",
+      "Could not reset password"
     );
   }
 
@@ -84,7 +88,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   return encodedRedirect(
     "success",
     "/forgot-password",
-    "Check your email for a link to reset your password.",
+    "Check your email for a link to reset your password."
   );
 };
 
@@ -98,7 +102,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/protected/reset-password",
-      "Password and confirm password are required",
+      "Password and confirm password are required"
     );
   }
 
@@ -106,7 +110,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/protected/reset-password",
-      "Passwords do not match",
+      "Passwords do not match"
     );
   }
 
@@ -118,7 +122,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     encodedRedirect(
       "error",
       "/protected/reset-password",
-      "Password update failed",
+      "Password update failed"
     );
   }
 
@@ -142,7 +146,7 @@ export const createTrip = async (formData: FormData) => {
   if (!error) {
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
-    redirect(data ? "/protected/trips/"+ data[0].id : "/protected/trips");
+    redirect(data ? "/protected/trips/" + data[0].id : "/protected/trips");
   } else {
     console.error(error);
   }
@@ -153,12 +157,12 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
   let { data, error } = await supabase
     .from("trips")
     .update([getTripsInsertionData(formData)])
-    .eq('id', id);
-  
-  if (!error) {    
+    .eq("id", id);
+
+  if (!error) {
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
-    redirect("/protected/trips/"+id);
+    redirect("/protected/trips/" + id);
   } else {
     console.error(error);
   }
@@ -166,10 +170,7 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
 
 export const deleteTrip = async (id: Trip["id"]) => {
   const supabase = createClient();
-  let { data, error } = await supabase
-    .from("trips")
-    .delete()
-    .eq('id', id);
+  let { data, error } = await supabase.from("trips").delete().eq("id", id);
   if (!error) {
     // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
@@ -177,14 +178,14 @@ export const deleteTrip = async (id: Trip["id"]) => {
   } else {
     console.error(error);
   }
-}
+};
 
 /********* PROFILE ACTIONS *********/
 
 export const updateProfile = async (formData: FormData) => {
   const supabase = createClient();
-  const user = await supabase.auth.getUser()
-  const id = user.data.user?.id
+  const user = await supabase.auth.getUser();
+  const id = user.data.user?.id;
   const { data, error } = await supabase
     .from("profiles")
     .update({
@@ -199,3 +200,64 @@ export const updateProfile = async (formData: FormData) => {
     console.error(error);
   }
 };
+
+const _removeOldAvatar = async (id: string) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", id)
+    .single();
+
+  if (!error) {
+    const filename = getFilename(data.avatar_url);
+    await supabase.storage.from("avatars").remove([`${id}/${filename}`]);
+  } else {
+    console.error(error);
+  }
+};
+
+const _updateAvatarUrl = async (path: string, id: string) => {
+  const supabase = createClient();
+  const publicUrl = supabase.storage.from("avatars").getPublicUrl(path);
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({
+      avatar_url: publicUrl.data.publicUrl,
+    })
+    .eq("id", id);
+
+  if (!error) {
+    revalidatePath("/protected/settings");
+    redirect("/protected/settings");
+  } else {
+    console.error(error);
+  }
+};
+
+export const uploadAvatar = async (formData: FormData) => {
+  const supabase = createClient();
+  const user = await getUser();
+  if (user) {
+    const { id } = user;
+    const avatarFile = formData.get("avatar") as File;
+
+    // Upload the new avatar file to the storage bucket
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(`${id}/avatar-${crypto.randomUUID()}`, avatarFile, {
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (!error && data) {
+      await _removeOldAvatar(id);
+      await _updateAvatarUrl(data.path, id);
+    } else {
+      console.error(error);
+    }
+
+    return { data, error };
+  }
+};
+

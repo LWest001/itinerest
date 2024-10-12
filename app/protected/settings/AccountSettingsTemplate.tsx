@@ -1,3 +1,5 @@
+"use server";
+
 import {
   Card,
   CardContent,
@@ -6,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
-import { ChevronLeft, Plus } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,14 +16,16 @@ import { Suspense } from "react";
 import { Profile } from "@/global.types";
 import EditableDataPair from "@/components/ui/editable-data-pair";
 import Loading from "./loading";
-import { updateProfile } from "@/app/actions";
+import { updateProfile, uploadAvatar } from "@/app/actions";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UploadButton from "@/components/ui/upload-button";
 
 type Props = {
   user: Profile | null;
 };
 
-function AccountSettingsTemplate({ user }: Props) {
+async function AccountSettingsTemplate({ user }: Props) {
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
@@ -63,14 +67,10 @@ function AccountSettingsTemplate({ user }: Props) {
                             : "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="relative h-0 w-0 p-0 m-0 ml-auto right-4">
-                        <Button
-                          className="h-5 w-5 absolute bottom-0 left-0 rounded-full border-none"
-                          size="icon"
-                        >
-                          <Plus />
-                        </Button>
-                      </div>
+                      <form action={uploadAvatar}>
+                        <UploadButton />
+                        <input type="submit" value="Upload" />
+                      </form>
                     </div>
                     <span className="text-xl font-semibold">
                       {user?.username}

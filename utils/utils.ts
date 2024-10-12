@@ -11,13 +11,13 @@ import { redirect } from "next/navigation";
 export function encodedRedirect(
   type: "error" | "success",
   path: string,
-  message: string,
+  message: string
 ) {
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
 export function getPointFromGeocodeResult(result: GeocodeSearchResult) {
-  return `POINT(${result.lon} ${result.lat})`
+  return `POINT(${result.lon} ${result.lat})`;
 }
 
 export function getTripsInsertionData(data: FormData) {
@@ -31,4 +31,8 @@ export function getTripsInsertionData(data: FormData) {
   };
 
   return tripData;
+}
+
+export function getFilename(avatarUrl: string) {
+  return avatarUrl.split("/").pop();
 }

@@ -42,6 +42,7 @@ function EditableDataPair({ property, value }: Props) {
             defaultValue={value}
             onChange={handleChange}
             name={propertyMap?.[property] || property}
+            id={propertyMap?.[property] || property}
           />
         ) : (
           <span className={"text-primary min-h-10"}>{value}</span>

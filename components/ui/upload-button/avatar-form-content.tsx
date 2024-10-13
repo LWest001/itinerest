@@ -6,9 +6,8 @@ import { Input } from "../input";
 import { Label } from "../label";
 import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
-
 import { Button } from "../button";
-import { Loader, Loader2, Upload } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import { useDebounceEffect } from "@/lib/useDebounceEffect";
 import { canvasPreview } from "@/lib/canvasPreview";
 import { cn } from "@/lib/utils";
@@ -46,12 +45,6 @@ function AvatarFormContent() {
         throw new Error("Crop canvas does not exist");
       }
 
-      // This will size relative to the uploaded image
-      // size. If you want to size according to what they
-      // are looking at on screen, remove scaleX + scaleY
-      const scaleX = image.naturalWidth / image.width;
-      const scaleY = image.naturalHeight / image.height;
-
       const offscreen = new OffscreenCanvas(250, 250);
       const ctx = offscreen.getContext("2d");
       if (!ctx) {
@@ -69,8 +62,7 @@ function AvatarFormContent() {
         offscreen.width,
         offscreen.height
       );
-      // You might want { type: "image/jpeg", quality: <0 to 1> } to
-      // reduce image size
+
       const blob = await offscreen.convertToBlob({
         type: "image/jpeg",
       });

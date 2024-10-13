@@ -20,7 +20,7 @@ function Loading() {
         <Skeleton className="w-40 h-4" />
       </div>
       <div className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-        <div className="mx-auto grid flex-1 auto-rows-max gap-4">
+        <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
           <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" className="h-7 w-7" asChild>
               <Link href={"/protected/trips"}>

@@ -14,7 +14,7 @@ import Image from "next/image";
 import CalendarBox from "@/components/ui/calendar-box";
 import Link from "next/link";
 import { EditTrip } from "@/components/ui/trips/buttons";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import Loading from "./loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,21 +24,32 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
 
 type Props = {
   trip: Trip | null;
   collaborators: Profile[];
+  coords: string[];
 };
 
-function ViewTripTemplate({ trip, collaborators }: Props) {
+async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
   const startDateNum = new Date(trip?.start_date + "\n").getDate();
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
   const endDateMonth = new Date(trip?.end_date + "\n").getMonth();
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("@/components/ui/map/map"), {
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
 
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
+        {trip && <Map center={coords} />}
         <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
           {trip && (
             <Breadcrumbs
@@ -202,7 +213,7 @@ function ViewTripTemplate({ trip, collaborators }: Props) {
                             </SelectContent>
                           </Select>
                         </div>
-                      </div> */}
+                        </div> */}
                   </CardContent>
                   <CardFooter className="justify-center border-t p-4">
                     <Button size="sm" variant="ghost" className="gap-1">

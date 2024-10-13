@@ -54,3 +54,7 @@ export function getTripsInsertionData(data: FormData) {
 export function getFilename(avatarUrl: string) {
   return avatarUrl.split("/").pop();
 }
+
+export function splitWkt(wkt: string) {
+  return wkt.replace("POINT(", "").replace(")", "").split(" ").reverse();
+}

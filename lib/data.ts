@@ -90,7 +90,7 @@ export async function getUsersByIds(ids: string[] | null, excludeCurrentUser = f
         return [];
     }
 
-    return data as User[];
+    return data as Profile[];
 }
 
 export async function getUserProfile() {

@@ -4,7 +4,7 @@ import {
   encodedRedirect,
   getFilename,
   getTripsInsertionData,
-} from "@/utils/utils";
+} from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -184,8 +184,8 @@ export const deleteTrip = async (id: Trip["id"]) => {
 
 export const updateProfile = async (formData: FormData) => {
   const supabase = createClient();
-  const user = await supabase.auth.getUser();
-  const id = user.data.user?.id;
+  const user = await getUser();
+  const id = user?.id;
   const { data, error } = await supabase
     .from("profiles")
     .update({

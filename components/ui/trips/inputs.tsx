@@ -23,7 +23,7 @@ import { GeocodeSearchResult, Trip } from "@/global.types";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { getPointFromGeocodeResult } from "@/utils/utils";
+import { getPointFromGeocodeResult } from "@/lib/utils";
 import { FormType } from "@/global.types";
 import { Skeleton } from "@/components/ui/skeleton";
 

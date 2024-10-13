@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 import { cn } from "@/lib/utils";
+import { Settings } from "lucide-react";
 
 const links = [
   { label: "Home", href: "/protected", icon: HomeIcon },
@@ -44,14 +45,27 @@ export default function NavLinks() {
   );
 }
 
-export function NavLinksMobile() {
-  return links.map((link) => (
-    <Link
-      href={link.href}
-      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-    >
-      <link.icon className="h-5 w-5" />
-      <span>{link.label}</span>
-    </Link>
-  ));
+export function NavLinksMobile({ onClick }: { onClick: () => void }) {
+  return (
+    <>
+      {links.map((link) => (
+        <Link
+          href={link.href}
+          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+          onClick={onClick}
+        >
+          <link.icon className="h-5 w-5" />
+          <span>{link.label}</span>
+        </Link>
+      ))}
+      <Link
+        href="/protected/settings"
+        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+        onClick={onClick}
+      >
+        <Settings className="h-5 w-5" />
+        <span>Settings</span>
+      </Link>
+    </>
+  );
 }

@@ -15,12 +15,12 @@ const TextSkeleton = () => <Skeleton className="w-40 h-6" />;
 
 function Loading() {
   return (
-    <div className="flex flex-col sm:gap-4 w-full ">
+    <div className="flex flex-col sm:gap-4 w-full">
       <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
         <Skeleton className="w-40 h-4" />
       </div>
       <div className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-        <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+        <div className="mx-auto grid flex-1 auto-rows-max gap-4">
           <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" className="h-7 w-7" asChild>
               <Link href={"/protected/trips"}>
@@ -28,13 +28,7 @@ function Loading() {
                 <span className="sr-only">Back</span>
               </Link>
             </Button>
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight text-wrap">
-              <TextSkeleton />
-            </h1>
-
-            <div className="flex items-center gap-2 ml-auto">
-              <TextSkeleton />
-            </div>
+            <TextSkeleton />
           </div>
           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">

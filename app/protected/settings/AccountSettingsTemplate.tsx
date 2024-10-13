@@ -20,7 +20,6 @@ import { updateProfile } from "@/app/actions";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UploadButton from "@/components/ui/upload-button/upload-button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
   user: Profile | null;

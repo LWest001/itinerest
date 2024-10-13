@@ -7,7 +7,7 @@ import { baskerville } from "@/components/ui/fonts";
 import HeaderAuth from "@/components/header-auth";
 import Image from "next/image";
 import icon from "@/app/icon.svg";
-import { SideNavMobile } from "@/components/ui/dashboard/sidenav";
+import { SideNavMobile } from "@/components/ui/dashboard/sidenav-mobile";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

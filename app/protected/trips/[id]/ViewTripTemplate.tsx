@@ -10,7 +10,6 @@ import {
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
 import { ArrowRight, ChevronLeft, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import CalendarBox from "@/components/ui/calendar-box";
 import Link from "next/link";
 import { EditTrip } from "@/components/ui/trips/buttons";
@@ -24,12 +23,12 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
+import Mapbox from "@/components/ui/map/mapbox";
 
 type Props = {
   trip: Trip | null;
   collaborators: Profile[];
-  coords: string[];
+  coords: { latitude: number; longitude: number };
 };
 
 async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
@@ -37,19 +36,10 @@ async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
   const endDateMonth = new Date(trip?.end_date + "\n").getMonth();
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("@/components/ui/map/map"), {
-        loading: () => <p>A map is loading</p>,
-        ssr: false,
-      }),
-    []
-  );
 
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
-        {trip && <Map center={coords} />}
         <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
           {trip && (
             <Breadcrumbs
@@ -114,56 +104,23 @@ async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
                       </div> */}
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="overflow-hidden">
                   <CardHeader>
-                    <CardTitle>Lodging</CardTitle>
+                    <CardTitle>Trip Map</CardTitle>
+                    <CardDescription>
+                      Lipsum dolor sit amet, consectetur adipiscing elit
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {trip?.lodging_name}
-                    {/* <div className="grid gap-6 sm:grid-cols-3">
-                        <div className="grid gap-3">
-                          <Label htmlFor="category">Category</Label>
-                          <Select>
-                            <SelectTrigger
-                              id="category"
-                              aria-label="Select category"
-                            >
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="clothing">Clothing</SelectItem>
-                              <SelectItem value="electronics">
-                                Electronics
-                              </SelectItem>
-                              <SelectItem value="accessories">
-                                Accessories
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-3">
-                          <Label htmlFor="subcategory">
-                            Subcategory (optional)
-                          </Label>
-                          <Select>
-                            <SelectTrigger
-                              id="subcategory"
-                              aria-label="Select subcategory"
-                            >
-                              <SelectValue placeholder="Select subcategory" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="t-shirts">T-Shirts</SelectItem>
-                              <SelectItem value="hoodies">Hoodies</SelectItem>
-                              <SelectItem value="sweatshirts">
-                                Sweatshirts
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div> */}
+                    <div className="grid gap-2">
+                      {/* <button>
+                        {trip && <Map trip={trip} center={coords} />}
+                      </button> */}
+                      {trip && <Mapbox center={coords} trip={trip} />}
+                    </div>
                   </CardContent>
                 </Card>
+
                 <Card>
                   <CardHeader>
                     <CardTitle>Activities</CardTitle>
@@ -222,26 +179,54 @@ async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
                     </Button>
                   </CardFooter>
                 </Card>
-                <Card className="overflow-hidden">
+                <Card>
                   <CardHeader>
-                    <CardTitle>Trip Map</CardTitle>
-                    <CardDescription>
-                      Lipsum dolor sit amet, consectetur adipiscing elit
-                    </CardDescription>
+                    <CardTitle>Lodging</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid gap-2">
-                      <button>
-                        <Image
-                          alt="Product image"
-                          className="aspect-square w-full rounded-md object-cover"
-                          height="300"
-                          src="/placeholder.svg"
-                          width="300"
-                          priority
-                        />
-                      </button>
-                    </div>
+                    {trip?.lodging_name}
+                    {/* <div className="grid gap-6 sm:grid-cols-3">
+                        <div className="grid gap-3">
+                          <Label htmlFor="category">Category</Label>
+                          <Select>
+                            <SelectTrigger
+                              id="category"
+                              aria-label="Select category"
+                            >
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="clothing">Clothing</SelectItem>
+                              <SelectItem value="electronics">
+                                Electronics
+                              </SelectItem>
+                              <SelectItem value="accessories">
+                                Accessories
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-3">
+                          <Label htmlFor="subcategory">
+                            Subcategory (optional)
+                          </Label>
+                          <Select>
+                            <SelectTrigger
+                              id="subcategory"
+                              aria-label="Select subcategory"
+                            >
+                              <SelectValue placeholder="Select subcategory" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="t-shirts">T-Shirts</SelectItem>
+                              <SelectItem value="hoodies">Hoodies</SelectItem>
+                              <SelectItem value="sweatshirts">
+                                Sweatshirts
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div> */}
                   </CardContent>
                 </Card>
                 <Card>

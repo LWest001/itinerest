@@ -1,6 +1,6 @@
 import { getTripById, getUsersByIds, getWktFromGeometry } from "@/lib/data";
 import ViewTripTemplate from "./ViewTripTemplate";
-import { splitWkt } from "@/lib/utils";
+import { getLatLon } from "@/lib/utils";
 
 type Props = {
   params: {
@@ -16,7 +16,7 @@ async function ViewTrip({ params }: Props) {
   const coords = await getWktFromGeometry(
     String(trip?.destination_coordinates)
   );
-  const coordsArray = splitWkt(coords);
+  const coordsArray = getLatLon(coords);
   return (
     <ViewTripTemplate
       trip={trip}

@@ -33,10 +33,10 @@ function getLocationString(str: string) {
 
 function TripCard({ trip }: Props) {
   const { start_date, end_date } = trip;
-  const startDateNum = new Date(start_date + "\n").getDate();
-  const startDateMonth = new Date(start_date + "\n").getMonth();
-  const endDateNum = new Date(end_date + "\n").getDate();
-  const endDateMonth = new Date(end_date + "\n").getMonth();
+  const startDateNum = new Date(start_date).getDate();
+  const startDateMonth = new Date(start_date).getMonth();
+  const endDateNum = new Date(end_date).getDate();
+  const endDateMonth = new Date(end_date).getMonth();
 
   return (
     <Link href={`/protected/trips/${trip.id}`}>

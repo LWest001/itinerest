@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { GeocodeSearchResult } from "@/global.types";
 import { redirect } from "next/navigation";
+import { LatLngExpression } from "leaflet";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,6 +56,13 @@ export function getFilename(avatarUrl: string) {
   return avatarUrl.split("/").pop();
 }
 
-export function splitWkt(wkt: string) {
-  return wkt.replace("POINT(", "").replace(")", "").split(" ").reverse();
+export function getLatLon(wkt: string) {
+  const arr = wkt.replace("POINT(", "").replace(")", "").split(" ").reverse();
+  if (arr.length !== 2) {
+    throw new Error("Invalid WKT format");
+  }
+  return {
+    latitude: Number(arr[0]),
+    longitude: Number(arr[1]),
+  };
 }

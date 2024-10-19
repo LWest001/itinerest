@@ -30,7 +30,7 @@ export default function NavLinks() {
                   {
                     "bg-accent text-accent-foreground transition-colors":
                       isActive,
-                  }
+                  },
                 )}
               >
                 <link.icon className="h-5 w-5" />
@@ -53,6 +53,7 @@ export function NavLinksMobile({ onClick }: { onClick: () => void }) {
           href={link.href}
           className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           onClick={onClick}
+          key={link.href}
         >
           <link.icon className="h-5 w-5" />
           <span>{link.label}</span>

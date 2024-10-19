@@ -22,13 +22,13 @@ const propertyMap: { [key: string]: string } = {
 
 function EditableDataPair({ property, value }: Props) {
   const pathname = usePathname();
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const searchParams = useSearchParams();
   const edit = searchParams.get("edit");
   const isEditing = edit === property;
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    push(`${pathname}?edit=${property}&newValue=${e.target.value}`);
+    replace(`${pathname}?edit=${property}&newValue=${e.target.value}`);
   }
 
   return (
@@ -87,7 +87,11 @@ function CancelButton() {
 export function EditButton({ property }: { property: string }) {
   const pathname = usePathname();
   return (
-    <Link className={linkButtonStyles} href={`${pathname}?edit=${property}`}>
+    <Link
+      className={linkButtonStyles}
+      href={`${pathname}?edit=${property}`}
+      replace
+    >
       <Edit className="h-4 w-4 text-primary" />
       <span className="sr-only">Edit {property}</span>
     </Link>

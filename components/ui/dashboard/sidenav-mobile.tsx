@@ -3,7 +3,13 @@
 import { NavLinksMobile } from "@/components/ui/dashboard/nav-links";
 import { PanelLeft } from "lucide-react";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "../sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "../sheet";
 import { Button } from "../button";
 import Image from "next/image";
 import icon from "@/app/icon.svg";
@@ -17,6 +23,8 @@ export function SideNavMobile() {
 
   return (
     <Sheet>
+      <SheetTitle className="sr-only">Itinerest</SheetTitle>
+      <SheetDescription className="sr-only">Navigation menu</SheetDescription>
       <SheetTrigger asChild>
         <Button
           size="icon"

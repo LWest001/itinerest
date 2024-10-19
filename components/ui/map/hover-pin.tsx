@@ -1,3 +1,5 @@
+"use client";
+
 import { Marker } from "react-map-gl";
 import {
   TooltipProvider,
@@ -5,7 +7,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "../tooltip";
-import { MapPin } from "lucide-react";
 
 function HoverPin({
   coords,

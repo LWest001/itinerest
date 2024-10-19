@@ -1,5 +1,3 @@
-"use client";
-
 import { Profile, Trip } from "@/global.types";
 import {
   Card,
@@ -15,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import CalendarBox from "@/components/ui/calendar-box";
 import Link from "next/link";
 import { EditTrip } from "@/components/ui/trips/buttons";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import Loading from "./loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,25 +24,28 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import Mapbox from "@/components/ui/map/mapbox";
+import EditableDataPair from "@/components/ui/editable-data-pair";
+import { DestinationCombobox } from "@/components/ui/trips/inputs";
 
 type Props = {
   trip: Trip | null;
   collaborators: Profile[];
   destinationCoords: { latitude: number; longitude: number } | undefined;
   lodgingCoords: { latitude: number; longitude: number } | undefined;
+  handleEdit: (formData: FormData) => Promise<void>;
 };
 
-function ViewTripTemplate({
+async function ViewTripTemplate({
   trip,
   collaborators,
   destinationCoords,
   lodgingCoords,
+  handleEdit,
 }: Props) {
   const startDateNum = new Date(trip?.start_date + "\n").getDate();
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
   const endDateMonth = new Date(trip?.end_date + "\n").getMonth();
-
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
@@ -83,9 +84,18 @@ function ViewTripTemplate({
                 <Card>
                   <CardHeader>
                     <CardTitle>Trip Details</CardTitle>
-                    <CardDescription>{trip?.destination}</CardDescription>
+                    <CardDescription>Trip description</CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex flex-col gap-2">
+                    {trip && (
+                      <form action={handleEdit}>
+                        <EditableDataPair
+                          value={trip.destination}
+                          property="Destination"
+                          input={<DestinationCombobox field="destination" />}
+                        />
+                      </form>
+                    )}
                     <div className="flex gap-5 items-center select-none">
                       <CalendarBox month={startDateMonth} date={startDateNum} />
                       <ArrowRight className="h-6 w-6" strokeWidth={3} />

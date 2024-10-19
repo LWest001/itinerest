@@ -8,19 +8,20 @@ import { Input } from "./input";
 import { Label } from "./label";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ReactComponentElement } from "react";
 
 type Props = {
   property: string;
   value: string;
+  input?: ReactComponentElement<any>;
+  disabled?: boolean;
 };
 
 const propertyMap: { [key: string]: string } = {
   "Display name": "username",
-  Email: "email",
-  Password: "password",
 };
 
-function EditableDataPair({ property, value }: Props) {
+function EditableDataPair({ property, value, input, disabled }: Props) {
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
@@ -33,24 +34,28 @@ function EditableDataPair({ property, value }: Props) {
 
   return (
     <div className="flex w-full justify-between items-center">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 w-full">
         <Label className="" htmlFor={propertyMap?.[property] || property}>
           {property}
         </Label>
         {isEditing ? (
-          <Input
-            defaultValue={value}
-            onChange={handleChange}
-            name={propertyMap?.[property] || property}
-            id={propertyMap?.[property] || property}
-          />
+          !!input ? (
+            input
+          ) : (
+            <Input
+              defaultValue={value}
+              onChange={handleChange}
+              name={propertyMap?.[property] || property}
+              id={propertyMap?.[property] || property}
+            />
+          )
         ) : (
           <span className={"text-primary min-h-10"}>{value}</span>
         )}
       </div>
       {isEditing ? (
         <div className="flex gap-1">
-          <SaveButton />
+          <SaveButton disabled={disabled} />
           <CancelButton />
         </div>
       ) : (
@@ -65,9 +70,9 @@ export default EditableDataPair;
 const buttonStyles = "aspect-square p-0 w-8 h-8";
 const linkButtonStyles = cn(buttonVariants({ variant: "ghost" }), buttonStyles);
 
-function SaveButton() {
+function SaveButton({ disabled }: { disabled?: boolean }) {
   return (
-    <Button variant={"ghost"} className={buttonStyles}>
+    <Button variant={"ghost"} className={buttonStyles} disabled={disabled}>
       <Check className="h-4 w-4 text-primary" />
       <span className="sr-only">Save changes</span>
     </Button>
@@ -77,7 +82,7 @@ function SaveButton() {
 function CancelButton() {
   const pathname = usePathname();
   return (
-    <Link className={linkButtonStyles} href={pathname}>
+    <Link className={linkButtonStyles} href={pathname} replace>
       <X className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Cancel changes</span>
     </Link>

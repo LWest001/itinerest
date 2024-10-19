@@ -16,27 +16,14 @@ import {
 import Link from "next/link";
 import FormFields from "@/components/ui/trips/formfields";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
-import { FormContext } from "@/utils/FormContext";
 
 type Props = {
   trip: Trip | null;
   handleEdit: (formData: FormData) => Promise<void>;
   handleDelete: () => Promise<void>;
-  destinationResults: GeocodeSearchResult[];
-  lodgingResults: GeocodeSearchResult[];
-  destinationCoordinates: string | null;
-  lodgingCoordinates: string | null;
 };
 
-export default function EditTripTemplate({
-  trip,
-  handleEdit,
-  handleDelete,
-  destinationResults,
-  lodgingResults,
-  destinationCoordinates,
-  lodgingCoordinates,
-}: Props) {
+export default function EditTripTemplate({ trip, handleEdit, handleDelete }: Props) {
   return (
     <div className="flex flex-col w-full">
       <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
@@ -55,17 +42,7 @@ export default function EditTripTemplate({
         className="flex w-full max-w-sm items-center gap-5 flex-col m-auto my-6"
         action={handleEdit}
       >
-        <FormContext.Provider
-          value={{
-            trip,
-            destinationResults,
-            lodgingResults,
-            destinationCoordinates,
-            lodgingCoordinates,
-          }}
-        >
-          <FormFields formType="edit" />
-        </FormContext.Provider>
+        <FormFields formType="edit" />
       </form>
 
       <div className="flex gap-2 items-center justify-center m-auto max-w-sm">

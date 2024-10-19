@@ -4,6 +4,7 @@ import { getTripById, getWktFromGeometry, searchLocation } from "@/lib/data";
 import { deleteTrip, updateTrip } from "@/app/actions";
 import { Suspense } from "react";
 import Loading from "./loading";
+import TripFormProvider from "@/utils/FormContext";
 
 type Props = {
   params: {
@@ -32,15 +33,21 @@ export default async function EditTrip({ params, searchParams }: Props) {
   return (
     <Suspense fallback={<Loading />}>
       {trip && (
-        <EditTripTemplate
-          trip={trip}
-          handleEdit={updateTripWithId}
-          handleDelete={deleteTripWithId}
-          destinationResults={destinationResults}
-          lodgingResults={lodgingResults}
-          destinationCoordinates={destinationCoordinates}
-          lodgingCoordinates={lodgingCoordinates}
-        />
+        <TripFormProvider
+          value={{
+            trip,
+            destinationResults,
+            lodgingResults,
+            destinationCoordinates,
+            lodgingCoordinates,
+          }}
+        >
+          <EditTripTemplate
+            trip={trip}
+            handleEdit={updateTripWithId}
+            handleDelete={deleteTripWithId}
+          />
+        </TripFormProvider>
       )}
     </Suspense>
   );

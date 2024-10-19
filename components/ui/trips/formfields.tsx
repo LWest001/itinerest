@@ -10,17 +10,16 @@ import {
   TripName,
 } from "./inputs"
 import { formatDate } from "@/lib/utils"
-import { useContext } from "react"
-import { FormContext } from "@/utils/FormContext"
+import { useTripForm } from "@/utils/FormContext";
 
 type Props = {
-  formType: FormType
-}
+  formType: FormType;
+};
 
 function FormFields({ formType }: Props) {
-  const { trip } = useContext(FormContext)
-  const minDate = formatDate(new Date())
-  const isEdit = formType === "edit" && !!trip
+  const { trip } = useTripForm();
+  const minDate = formatDate(new Date());
+  const isEdit = formType === "edit" && !!trip;
 
   return (
     <>
@@ -28,16 +27,8 @@ function FormFields({ formType }: Props) {
         label="Trip name"
         defaultValue={isEdit ? trip.name : undefined}
       />
-      <DestinationCombobox
-        field={"destination"}
-        label="Destination"
-        formType={formType}
-      />
-      <DestinationCombobox
-        field={"lodging_name"}
-        label="Lodging"
-        formType={formType}
-      />
+      <DestinationCombobox field={"destination"} />
+      <DestinationCombobox field={"lodging_name"} />
       <StartDate
         minDate={minDate}
         label="Start date"
@@ -49,7 +40,7 @@ function FormFields({ formType }: Props) {
       />
       <Submit type="submit">Save trip</Submit>
     </>
-  )
+  );
 }
 
 export default FormFields

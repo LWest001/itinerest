@@ -1,3 +1,5 @@
+"use client";
+
 import { GeocodeSearchResult, Trip } from "@/global.types";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,43 +16,64 @@ import {
 import Link from "next/link";
 import FormFields from "@/components/ui/trips/formfields";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
+import { FormContext } from "@/utils/FormContext";
 
 type Props = {
-  trip: Trip;
-  searchResults: GeocodeSearchResult[];
+  trip: Trip | null;
   handleEdit: (formData: FormData) => Promise<void>;
   handleDelete: () => Promise<void>;
+  destinationResults: GeocodeSearchResult[];
+  lodgingResults: GeocodeSearchResult[];
+  destinationCoordinates: string | null;
+  lodgingCoordinates: string | null;
 };
 
 export default function EditTripTemplate({
   trip,
   handleEdit,
   handleDelete,
-  searchResults,
+  destinationResults,
+  lodgingResults,
+  destinationCoordinates,
+  lodgingCoordinates,
 }: Props) {
   return (
     <div className="flex flex-col w-full">
       <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
-        <Breadcrumbs
-          links={[
-            { href: "/protected", label: "Home" },
-            { href: "/protected/trips", label: "Trips" },
-            { href: `/protected/trips/${trip.id}`, label: trip.name },
-            { href: `/protected/trips/${trip.id}/edit`, label: "Edit" },
-          ]}
-        />
+        {trip && (
+          <Breadcrumbs
+            links={[
+              { href: "/protected", label: "Home" },
+              { href: "/protected/trips", label: "Trips" },
+              { href: `/protected/trips/${trip.id}`, label: trip.name },
+              { href: `/protected/trips/${trip.id}/edit`, label: "Edit" },
+            ]}
+          />
+        )}
       </div>
       <form
         className="flex w-full max-w-sm items-center gap-5 flex-col m-auto my-6"
         action={handleEdit}
       >
-        <FormFields trip={trip} formType="edit" searchResults={searchResults} />
+        <FormContext.Provider
+          value={{
+            trip,
+            destinationResults,
+            lodgingResults,
+            destinationCoordinates,
+            lodgingCoordinates,
+          }}
+        >
+          <FormFields formType="edit" />
+        </FormContext.Provider>
       </form>
 
       <div className="flex gap-2 items-center justify-center m-auto max-w-sm">
-        <Button asChild variant={"ghost"}>
-          <Link href={`/protected/trips/${trip.id}`}>Discard changes</Link>
-        </Button>
+        {trip && (
+          <Button asChild variant={"ghost"}>
+            <Link href={`/protected/trips/${trip.id}`}>Discard changes</Link>
+          </Button>
+        )}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant={"destructive"}>Delete trip</Button>

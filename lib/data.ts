@@ -58,17 +58,23 @@ export async function searchLocation(searchTerm?: string) {
 
 
 
-export async function getWktFromGeometry(geometry: string) {
-    const supabase = createClient();
+export async function getWktFromGeometry(geometry: unknown) {
+  if (!geometry) {
+    return;
+  }
 
-    const { data, error } = await supabase.rpc('get_wkt_from_geometry', { geometry });
-    
-    if (error) {
-        console.error('Error fetching WKT from geometry:', error);
-        return null;
-    }
+  const supabase = createClient();
 
-    return data;
+  const { data, error } = await supabase.rpc("get_wkt_from_geometry", {
+    geometry: String(geometry),
+  });
+
+  if (error) {
+    console.error("Error fetching WKT from geometry:", error);
+    return null;
+  }
+
+  return data;
 }
 
 export async function getUsersByIds(ids: string[] | null, excludeCurrentUser = false) {

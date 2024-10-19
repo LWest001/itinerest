@@ -1,24 +1,26 @@
-import { FormType, Trip } from "@/global.types";
-import { Submit } from "../submit";
+"use client"
+
+import { FormType, Trip } from "@/global.types"
+import { Submit } from "../submit"
 import {
   DestinationCombobox,
   EndDate,
   LodgingName,
   StartDate,
   TripName,
-} from "./inputs";
-import { formatDate } from "@/lib/utils";
-import { getWktFromGeometry } from "@/lib/data";
+} from "./inputs"
+import { formatDate } from "@/lib/utils"
+import { useContext } from "react"
+import { FormContext } from "@/utils/FormContext"
 
 type Props = {
-  trip?: Trip;
-  searchResults: any[];
-  formType: FormType;
-};
-async function FormFields({ trip, searchResults, formType }: Props) {
-  const minDate = formatDate(new Date());
-  const isEdit = formType === "edit" && !!trip;
-  const point = await getWktFromGeometry(String(trip?.destination_coordinates));
+  formType: FormType
+}
+
+function FormFields({ formType }: Props) {
+  const { trip } = useContext(FormContext)
+  const minDate = formatDate(new Date())
+  const isEdit = formType === "edit" && !!trip
 
   return (
     <>
@@ -26,24 +28,15 @@ async function FormFields({ trip, searchResults, formType }: Props) {
         label="Trip name"
         defaultValue={isEdit ? trip.name : undefined}
       />
-      {/* <City label="Trip location" defaultValue={trip?.destination} /> */}
       <DestinationCombobox
-        options={searchResults}
+        field={"destination"}
         label="Destination"
-        tripId={isEdit ? trip.id : undefined}
         formType={formType}
-        defaultValues={
-          isEdit
-            ? {
-                destination: trip.destination,
-                destination_coordinates: point,
-              }
-            : undefined
-        }
       />
-      <LodgingName
+      <DestinationCombobox
+        field={"lodging_name"}
         label="Lodging"
-        defaultValue={isEdit ? trip?.lodging_name : undefined}
+        formType={formType}
       />
       <StartDate
         minDate={minDate}
@@ -56,7 +49,7 @@ async function FormFields({ trip, searchResults, formType }: Props) {
       />
       <Submit type="submit">Save trip</Submit>
     </>
-  );
+  )
 }
 
-export default FormFields;
+export default FormFields

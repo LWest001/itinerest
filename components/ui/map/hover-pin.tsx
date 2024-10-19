@@ -10,9 +10,11 @@ import { MapPin } from "lucide-react";
 function HoverPin({
   coords,
   text,
+  children,
 }: {
   coords: { latitude: number; longitude: number };
   text: string;
+  children: React.ReactNode;
 }) {
   return (
     <Marker
@@ -23,10 +25,8 @@ function HoverPin({
     >
       <TooltipProvider>
         <Tooltip delayDuration={0}>
-          <TooltipTrigger>
-            <MapPin size={24} fill="red" />
-          </TooltipTrigger>
-          <TooltipContent>{text}</TooltipContent>
+          <TooltipTrigger>{children}</TooltipTrigger>
+          <TooltipContent className="z-50">{text}</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </Marker>

@@ -13,15 +13,18 @@ async function ViewTrip({ params }: Props) {
   const collaborators = trip
     ? await getUsersByIds(trip?.collaborators, true)
     : [];
-  const coords = await getWktFromGeometry(
-    String(trip?.destination_coordinates)
+  const destinationPOINT = await getWktFromGeometry(
+    trip?.destination_coordinates as unknown,
   );
-  const coordsArray = getLatLon(coords);
+  const destinationCoords = getLatLon(destinationPOINT);
+  const lodgingPOINT = await getWktFromGeometry(trip?.lodging_coordinates);
+  const lodgingCoords = getLatLon(lodgingPOINT);
   return (
     <ViewTripTemplate
       trip={trip}
       collaborators={collaborators}
-      coords={coordsArray}
+      destinationCoords={destinationCoords}
+      lodgingCoords={lodgingCoords}
     />
   );
 }

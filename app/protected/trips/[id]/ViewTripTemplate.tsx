@@ -1,3 +1,5 @@
+"use client";
+
 import { Profile, Trip } from "@/global.types";
 import {
   Card,
@@ -28,10 +30,16 @@ import Mapbox from "@/components/ui/map/mapbox";
 type Props = {
   trip: Trip | null;
   collaborators: Profile[];
-  coords: { latitude: number; longitude: number };
+  destinationCoords: { latitude: number; longitude: number } | undefined;
+  lodgingCoords: { latitude: number; longitude: number } | undefined;
 };
 
-async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
+function ViewTripTemplate({
+  trip,
+  collaborators,
+  destinationCoords,
+  lodgingCoords,
+}: Props) {
   const startDateNum = new Date(trip?.start_date + "\n").getDate();
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
@@ -113,10 +121,13 @@ async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-2">
-                      {/* <button>
-                        {trip && <Map trip={trip} center={coords} />}
-                      </button> */}
-                      {trip && <Mapbox center={coords} trip={trip} />}
+                      {trip && destinationCoords && (
+                        <Mapbox
+                          center={destinationCoords}
+                          lodgingCoords={lodgingCoords}
+                          trip={trip}
+                        />
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -145,7 +156,7 @@ async function ViewTripTemplate({ trip, collaborators, coords }: Props) {
                   <CardContent>
                     <div
                       className={cn(
-                        collaborators.length && "grid gap-2 grid-cols-3"
+                        collaborators.length && "grid gap-2 grid-cols-3",
                       )}
                     >
                       {collaborators.length ? (

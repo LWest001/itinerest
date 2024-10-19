@@ -45,9 +45,16 @@ export function getTripsInsertionData(data: FormData) {
     destination: data.get("destination"),
     destination_coordinates: data.get("destination_coordinates"),
     lodging_name: data.get("lodging_name"),
+    lodging_coordinates: data.get("lodging_coordinates"),
     start_date: data.get("start_date"),
     end_date: data.get("end_date"),
   };
+
+  for (const property in tripData) {
+    if (tripData[property as keyof typeof tripData] === null) {
+      delete tripData[property as keyof typeof tripData];
+    }
+  }
 
   return tripData;
 }
@@ -57,6 +64,9 @@ export function getFilename(avatarUrl: string) {
 }
 
 export function getLatLon(wkt: string) {
+  if (!wkt) {
+    return;
+  }
   const arr = wkt.replace("POINT(", "").replace(")", "").split(" ").reverse();
   if (arr.length !== 2) {
     throw new Error("Invalid WKT format");

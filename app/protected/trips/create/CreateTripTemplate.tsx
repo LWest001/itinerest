@@ -1,15 +1,20 @@
+"use client";
+
 import { createTrip } from "@/app/actions";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
 import FormFields from "@/components/ui/trips/formfields";
 import { GeocodeSearchResult, Trip } from "@/global.types";
-import { FormattedDate } from "@/lib/utils";
+import { FormContext } from "@/utils/FormContext";
 
 type Props = {
-  searchResults: GeocodeSearchResult[];
-  minDate: FormattedDate;
+  destinationResults: GeocodeSearchResult[];
+  lodgingResults: GeocodeSearchResult[];
 };
 
-export default function CreateTripTemplate({ searchResults, minDate }: Props) {
+export default function CreateTripTemplate({
+  destinationResults,
+  lodgingResults,
+}: Props) {
   return (
     <div className="flex flex-col w-full">
       <div className="sticky top-0 flex items-center gap-4 px-4 sm:static h-14 sm:bg-transparent sm:px-6 sm:h-auto">
@@ -25,7 +30,14 @@ export default function CreateTripTemplate({ searchResults, minDate }: Props) {
         className="flex w-full max-w-sm items-center gap-5 flex-col m-auto my-6"
         action={createTrip}
       >
-        <FormFields searchResults={searchResults} formType="create" />
+        <FormContext.Provider
+          value={{
+            destinationResults,
+            lodgingResults,
+          }}
+        >
+          <FormFields formType="create" />
+        </FormContext.Provider>
       </form>
     </div>
   );

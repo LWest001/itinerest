@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +26,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { getPointFromGeocodeResult } from "@/lib/utils";
 import { FormType } from "@/global.types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FormContext } from "@/utils/FormContext";
 
 type Props = {
   minDate: string;
@@ -112,45 +113,68 @@ export function TripName({
 
 type DestinationComboboxProps = {
   label: string;
-  options: GeocodeSearchResult[];
+  field: "destination" | "lodging_name";
   formType: FormType;
-  tripId?: Trip["id"];
-  defaultValues?: {
-    destination: Trip["destination"];
-    destination_coordinates: Trip["destination_coordinates"];
-  };
 };
-
-function getRouterString(
-  formType: FormType,
-  value: string,
-  tripId?: Trip["id"]
-) {
-  return `/protected/trips/${formType === "edit" ? tripId + "/" : ""}${formType}?search=${value}`;
-}
 
 export function DestinationCombobox({
   label,
-  options,
+  field,
   formType,
-  tripId,
-  defaultValues,
 }: DestinationComboboxProps) {
+  const {
+    trip,
+    destinationCoordinates,
+    destinationResults,
+    lodgingCoordinates,
+    lodgingResults,
+  } = useContext(FormContext);
+
+  const tripId = trip?.id;
+  const options = field === "destination" ? destinationResults : lodgingResults;
+  const defaultName =
+    field === "destination" ? trip?.destination : trip?.lodging_name;
   const searchParams = useSearchParams();
-  const search = searchParams.get("search");
+  const search =
+    field === "destination"
+      ? searchParams.get("destination-search")
+      : searchParams.get("lodging-search");
   const defaultValue = search || "Where are you going?";
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<string>();
   const [forceMount, setForceMount] = useState(false);
   const [isPending, setIsPending] = useState(false);
-  const handleValueChange = useDebouncedCallback((value: string) => {
-    router.replace(getRouterString(formType, value, tripId));
+  const [selectedOption, setSelectedOption] =
+    useState<GeocodeSearchResult | null>(null);
+  function isSelected(option: GeocodeSearchResult) {
+    return JSON.stringify(selectedOption) === JSON.stringify(option);
+  }
+
+  const handleValueChange = (value: string) => {
+    router.replace(
+      getRouterString({
+        formType,
+        field,
+        tripId,
+        destinationSearch:
+          field === "destination"
+            ? value
+            : searchParams.get("destination-search"),
+        lodgingSearch:
+          field === "lodging_name" ? value : searchParams.get("lodging-search"),
+      }),
+    );
+  };
+
+  const debouncedHandleValueChange = useDebouncedCallback((value: string) => {
+    if (value?.length < 2) {
+      setIsPending(false);
+      return;
+    }
+    handleValueChange(value);
   }, 1000);
 
-  const selectedOption = options.find(
-    (option) => String(option.place_id) === String(value)
-  );
   useEffect(() => {
     if (options.length) {
       setForceMount(true);
@@ -158,29 +182,31 @@ export function DestinationCombobox({
       setForceMount(false);
     }
     setIsPending(false);
-  }, [options, search]);
+  }, [options, destinationResults, lodgingResults]);
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <Label htmlFor="destination">{label}</Label>
-      <Input
-        defaultValue={
-          searchParams.size > 0
-            ? selectedOption?.display_name
-            : defaultValues?.destination
-        }
-        name="destination"
-        className="hidden"
-      />
-      <Input
-        defaultValue={
-          searchParams.size > 0 && !!selectedOption
-            ? getPointFromGeocodeResult(selectedOption)
-            : String(defaultValues?.destination_coordinates || "")
-        }
-        name="destination_coordinates"
-        className="hidden"
-      />
+      <Label htmlFor={field}>{label}</Label>
+      {/* This hidden input holds and sends the name of the location */}
+      {selectedOption && (
+        <Input
+          defaultValue={selectedOption?.display_name}
+          name={field}
+          className="hidden"
+        />
+      )}
+      {/* This hidden input holds and sends the coordinates of the location */}
+      {selectedOption && (
+        <Input
+          defaultValue={getPointFromGeocodeResult(selectedOption)}
+          name={
+            field === "destination"
+              ? "destination_coordinates"
+              : "lodging_coordinates"
+          }
+          className="hidden"
+        />
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -193,56 +219,50 @@ export function DestinationCombobox({
               ? selectedOption?.display_name
               : options?.length
                 ? "Select option..."
-                : defaultValues
-                  ? defaultValues.destination
-                  : "Find your destination..."}
+                : defaultName || "Find your destination..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] max-h-[--radix-popover-content-available-height]">
           <Command>
+            {/* This visible input just helps perform the search and presents options,
+             but does not generate anything for the formData object */}
             <CommandInput
               //   className="w-full"
               placeholder={defaultValue || "Search"}
-              name="destination"
+              name={"commandInput"}
+              id={field}
               onValueChange={(s) => {
                 setForceMount(false);
                 setIsPending(s === "" ? false : true);
-                handleValueChange(s);
+                s?.length
+                  ? debouncedHandleValueChange(s)
+                  : handleValueChange(s);
               }}
               required
             />
-
-            {isPending && (
-              <>
-                <Skeleton className="w-full h-9 mt-1" />
-              </>
-            )}
-            <CommandList className={cn({ hidden: !search?.length })}>
-              <CommandEmpty
-                className={cn("py-6 text-center text-sm", {
-                  hidden: options?.length || isPending,
-                })}
-              >
-                No results found.
-              </CommandEmpty>
+            {isPending && <Skeleton className="w-full h-9 mt-1" />}
+            <CommandList className="pt-3">
+              {!isPending && search?.length && !options?.length && (
+                <CommandEmpty className={cn("py-6 text-center text-sm")}>
+                  No results found.
+                </CommandEmpty>
+              )}
 
               <CommandGroup forceMount={forceMount}>
                 {options.map((option) => (
                   <CommandItem
                     key={option.place_id}
-                    value={String(option.place_id)}
+                    value={JSON.stringify(option)}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
-                      setOpen(currentValue === value ? true : false);
+                      setSelectedOption(JSON.parse(currentValue));
+                      setOpen(isSelected(option) ? true : false);
                     }}
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-4 w-4",
-                        String(value) === String(option.place_id)
-                          ? "opacity-100"
-                          : "opacity-0"
+                        "mr-2 h-8 w-8",
+                        isSelected(option) ? "opacity-100" : "opacity-0",
                       )}
                     />
                     {option.display_name}
@@ -257,3 +277,13 @@ export function DestinationCombobox({
   );
 }
 
+function getRouterString(options: {
+  formType: FormType;
+  field: "destination" | "lodging_name";
+  destinationSearch: string | null;
+  lodgingSearch: string | null;
+  tripId?: Trip["id"];
+}) {
+  const { formType, destinationSearch, lodgingSearch, tripId } = options;
+  return `/protected/trips/${formType === "edit" ? `${tripId}/` : ""}${formType}?${destinationSearch ? `destination-search=${destinationSearch}` : ""}${destinationSearch && lodgingSearch ? "&" : ""}${lodgingSearch ? `lodging-search=${lodgingSearch}` : ""}`;
+}

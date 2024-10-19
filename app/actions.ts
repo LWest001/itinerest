@@ -144,7 +144,6 @@ export const createTrip = async (formData: FormData) => {
     .insert([getTripsInsertionData(formData)])
     .select();
   if (!error) {
-    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
     redirect(data ? "/protected/trips/" + data[0].id : "/protected/trips");
   } else {
@@ -160,7 +159,6 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
     .eq("id", id);
 
   if (!error) {
-    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
     redirect("/protected/trips/" + id);
   } else {
@@ -172,7 +170,6 @@ export const deleteTrip = async (id: Trip["id"]) => {
   const supabase = createClient();
   let { data, error } = await supabase.from("trips").delete().eq("id", id);
   if (!error) {
-    // When we call this, the fetching function in our notes page (where we have the server component) will be revalidated to get the new data
     revalidatePath("/protected/trips");
     redirect("/protected/trips");
   } else {

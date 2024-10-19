@@ -1,5 +1,3 @@
-"use client";
-
 import { Marker } from "react-map-gl";
 import {
   TooltipProvider,

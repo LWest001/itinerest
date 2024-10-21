@@ -12,7 +12,6 @@ import { ArrowRight, ChevronLeft, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CalendarBox from "@/components/ui/calendar-box";
 import Link from "next/link";
-import { EditTrip } from "@/components/ui/trips/buttons";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,7 +29,6 @@ import {
   EndDate,
   StartDate,
 } from "@/components/ui/trips/inputs";
-import { Label } from "@/components/ui/label";
 
 type Props = {
   trip: Trip | null;
@@ -88,6 +86,7 @@ async function ViewTripTemplate({
                       </h1>
                     }
                     suppressLabel
+                    withContent
                   />
                 </form>
               )}
@@ -119,7 +118,8 @@ async function ViewTripTemplate({
                         {trip && (
                           <form
                             action={handleEdit}
-                            className="flex justify-between flex-wrap gap-5 items-center"
+                            // className="flex justify-between flex-wrap gap-5 items-center"
+                            className="grid items-center grid-cols-1 xs:grid-cols-[2fr_1fr_2fr] gap-2"
                           >
                             <EditableDataPair
                               value={trip.start_date}
@@ -133,10 +133,12 @@ async function ViewTripTemplate({
                               }
                               className={calendarFieldClassName}
                             />
-                            <ArrowRight
-                              className="h-6 w-6 hidden xs:block"
-                              strokeWidth={3}
-                            />
+                            <div className="flex items-center justify-center">
+                              <ArrowRight
+                                className="h-6 w-6 hidden xs:block"
+                                strokeWidth={3}
+                              />
+                            </div>
                             <EditableDataPair
                               value={trip.end_date}
                               property="End Date"
@@ -147,7 +149,7 @@ async function ViewTripTemplate({
                                   date={endDateNum}
                                 />
                               }
-                              className={calendarFieldClassName}
+                              className={calendarFieldClassName + " xs:ml-auto"}
                             />
                           </form>
                         )}

@@ -18,6 +18,7 @@ type Props = {
   display?: ReactComponentElement<any>;
   className?: string;
   suppressLabel?: boolean;
+  withContent?: boolean;
 };
 
 const propertyMap: { [key: string]: string } = {
@@ -32,6 +33,7 @@ function EditableDataPair({
   display,
   className,
   suppressLabel,
+  withContent = false,
 }: Props) {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -69,7 +71,7 @@ function EditableDataPair({
       );
     }
   }, [isEditing, inputs, value, display]);
-
+  console.log(property, withContent);
   return (
     <div
       className={cn(
@@ -77,24 +79,34 @@ function EditableDataPair({
         { "gap-2": !suppressLabel },
       )}
     >
-      <div className="flex flex-col gap-1 w-full">
+      <div className="flex gap-1 w-full items-center">
         <Label
           htmlFor={propertyMap?.[property] || property}
           className={cn({ "sr-only": suppressLabel })}
         >
           {capitalize(property)}
         </Label>
+        {!withContent &&
+          (isEditing ? (
+            <div className="flex gap-1">
+              <SaveButton disabled={disabled} />
+              <CancelButton />
+            </div>
+          ) : (
+            <EditButton property={property} />
+          ))}
       </div>
       <div className={"flex items-center gap-2 w-full"}>
         {content}
-        {isEditing ? (
-          <div className="flex gap-1">
-            <SaveButton disabled={disabled} />
-            <CancelButton />
-          </div>
-        ) : (
-          <EditButton property={property} />
-        )}
+        {withContent &&
+          (isEditing ? (
+            <div className="flex gap-1">
+              <SaveButton disabled={disabled} />
+              <CancelButton />
+            </div>
+          ) : (
+            <EditButton property={property} />
+          ))}
       </div>
     </div>
   );
@@ -102,7 +114,7 @@ function EditableDataPair({
 
 export default EditableDataPair;
 
-const buttonStyles = "aspect-square p-0 w-8 h-8";
+const buttonStyles = "aspect-square p-0 w-6 h-6";
 const linkButtonStyles = cn(buttonVariants({ variant: "ghost" }), buttonStyles);
 
 function SaveButton({ disabled }: { disabled?: boolean }) {

@@ -85,7 +85,7 @@ function EditableDataPair({
           {capitalize(property)}
         </Label>
       </div>
-      <div className={"flex items-center gap-2"}>
+      <div className={"flex items-center gap-2 w-full"}>
         {content}
         {isEditing ? (
           <div className="flex gap-1">

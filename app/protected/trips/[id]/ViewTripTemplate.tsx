@@ -51,6 +51,7 @@ async function ViewTripTemplate({
   const startDateMonth = new Date(trip?.start_date + "\n").getMonth();
   const endDateNum = new Date(trip?.end_date + "\n").getDate();
   const endDateMonth = new Date(trip?.end_date + "\n").getMonth();
+  const calendarFieldClassName = "max-w-fit min-h-[86px] justify-start";
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col sm:gap-4 w-full ">
@@ -66,7 +67,7 @@ async function ViewTripTemplate({
           )}
         </div>
         <div className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-full">
             <div className="flex items-center gap-4">
               <Button variant="outline" size="icon" className="h-7 w-7" asChild>
                 <Link href={"/protected/trips"}>
@@ -108,13 +109,12 @@ async function ViewTripTemplate({
                           value={trip.destination}
                           property="Destination"
                           inputs={<DestinationCombobox field="destination" />}
+                          className="w-full min-w-full"
                         />
                       </form>
                     )}
                     <div className="flex flex-col gap-1">
-                      <Label asChild>
-                        <h3>Trip dates</h3>
-                      </Label>
+                      <h4>Trip dates</h4>
                       <div>
                         {trip && (
                           <form
@@ -131,10 +131,10 @@ async function ViewTripTemplate({
                                   date={startDateNum}
                                 />
                               }
-                              className="max-w-fit"
+                              className={calendarFieldClassName}
                             />
                             <ArrowRight
-                              className="h-6 w-6 hidden sm:block "
+                              className="h-6 w-6 hidden xs:block"
                               strokeWidth={3}
                             />
                             <EditableDataPair
@@ -147,7 +147,7 @@ async function ViewTripTemplate({
                                   date={endDateNum}
                                 />
                               }
-                              className="max-w-fit"
+                              className={calendarFieldClassName}
                             />
                           </form>
                         )}

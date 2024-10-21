@@ -73,7 +73,6 @@ function EditableDataPair({
       );
     }
   }, [isEditing, inputs, value, display]);
-  console.log(property, withContent);
   return (
     <div
       className={cn(

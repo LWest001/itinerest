@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { GeocodeSearchResult } from "@/global.types";
 import { redirect } from "next/navigation";
-import { LatLngExpression } from "leaflet";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -30,7 +29,7 @@ export function formatDate(date: Date) {
 export function encodedRedirect(
   type: "error" | "success",
   path: string,
-  message: string
+  message: string,
 ) {
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
@@ -75,4 +74,8 @@ export function getLatLon(wkt: string) {
     latitude: Number(arr[0]),
     longitude: Number(arr[1]),
   };
+}
+
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

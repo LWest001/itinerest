@@ -25,7 +25,12 @@ import {
 import { cn } from "@/lib/utils";
 import Mapbox from "@/components/ui/map/mapbox";
 import EditableDataPair from "@/components/ui/editable-data-pair";
-import { DestinationCombobox } from "@/components/ui/trips/inputs";
+import {
+  DestinationCombobox,
+  EndDate,
+  StartDate,
+} from "@/components/ui/trips/inputs";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   trip: Trip | null;
@@ -69,15 +74,25 @@ async function ViewTripTemplate({
                   <span className="sr-only">Back</span>
                 </Link>
               </Button>
-              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight text-wrap">
-                {trip?.name}
-              </h1>
+
+              {trip && (
+                <form action={handleEdit}>
+                  <EditableDataPair
+                    property="name"
+                    value={trip.name}
+                    className="max-w-fit"
+                    display={
+                      <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight text-wrap">
+                        {trip.name}
+                      </h1>
+                    }
+                    suppressLabel
+                  />
+                </form>
+              )}
               {/* <Badge variant="outline" className="ml-auto sm:ml-0">
                   In stock
                 </Badge> */}
-              <div className="flex items-center gap-2 ml-auto">
-                {trip && <EditTrip id={trip.id} />}
-              </div>
             </div>
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
@@ -92,34 +107,52 @@ async function ViewTripTemplate({
                         <EditableDataPair
                           value={trip.destination}
                           property="Destination"
-                          input={<DestinationCombobox field="destination" />}
+                          inputs={<DestinationCombobox field="destination" />}
                         />
                       </form>
                     )}
-                    <div className="flex gap-5 items-center select-none">
-                      <CalendarBox month={startDateMonth} date={startDateNum} />
-                      <ArrowRight className="h-6 w-6" strokeWidth={3} />
-                      <CalendarBox month={endDateMonth} date={endDateNum} />
+                    <div className="flex flex-col gap-1">
+                      <Label asChild>
+                        <h3>Trip dates</h3>
+                      </Label>
+                      <div>
+                        {trip && (
+                          <form
+                            action={handleEdit}
+                            className="flex justify-between flex-wrap gap-5 items-center"
+                          >
+                            <EditableDataPair
+                              value={trip.start_date}
+                              property="Start Date"
+                              inputs={<StartDate />}
+                              display={
+                                <CalendarBox
+                                  month={startDateMonth}
+                                  date={startDateNum}
+                                />
+                              }
+                              className="max-w-fit"
+                            />
+                            <ArrowRight
+                              className="h-6 w-6 hidden sm:block "
+                              strokeWidth={3}
+                            />
+                            <EditableDataPair
+                              value={trip.end_date}
+                              property="End Date"
+                              inputs={<EndDate />}
+                              display={
+                                <CalendarBox
+                                  month={endDateMonth}
+                                  date={endDateNum}
+                                />
+                              }
+                              className="max-w-fit"
+                            />
+                          </form>
+                        )}
+                      </div>
                     </div>
-                    {/* <div className="grid gap-6">
-                        <div className="grid gap-3">
-                          <Label htmlFor="name">Name</Label>
-                          <Input
-                            id="name"
-                            type="text"
-                            className="w-full"
-                            defaultValue="Gamer Gear Pro Controller"
-                          />
-                        </div>
-                        <div className="grid gap-3">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc."
-                            className="min-h-32"
-                          />
-                        </div>
-                      </div> */}
                   </CardContent>
                 </Card>
                 <Card className="overflow-hidden">
@@ -177,21 +210,6 @@ async function ViewTripTemplate({
                         <p>Invite some travel buddies!</p>
                       )}
                     </div>
-                    {/* <div className="grid gap-6">
-                        <div className="grid gap-3">
-                          <Label htmlFor="status">Status</Label>
-                          <Select>
-                            <SelectTrigger id="status" aria-label="Select status">
-                              <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="draft">Draft</SelectItem>
-                              <SelectItem value="published">Active</SelectItem>
-                              <SelectItem value="archived">Archived</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        </div> */}
                   </CardContent>
                   <CardFooter className="justify-center border-t p-4">
                     <Button size="sm" variant="ghost" className="gap-1">
@@ -205,49 +223,15 @@ async function ViewTripTemplate({
                     <CardTitle>Lodging</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {trip?.lodging_name}
-                    {/* <div className="grid gap-6 sm:grid-cols-3">
-                        <div className="grid gap-3">
-                          <Label htmlFor="category">Category</Label>
-                          <Select>
-                            <SelectTrigger
-                              id="category"
-                              aria-label="Select category"
-                            >
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="clothing">Clothing</SelectItem>
-                              <SelectItem value="electronics">
-                                Electronics
-                              </SelectItem>
-                              <SelectItem value="accessories">
-                                Accessories
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-3">
-                          <Label htmlFor="subcategory">
-                            Subcategory (optional)
-                          </Label>
-                          <Select>
-                            <SelectTrigger
-                              id="subcategory"
-                              aria-label="Select subcategory"
-                            >
-                              <SelectValue placeholder="Select subcategory" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="t-shirts">T-Shirts</SelectItem>
-                              <SelectItem value="hoodies">Hoodies</SelectItem>
-                              <SelectItem value="sweatshirts">
-                                Sweatshirts
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div> */}
+                    {trip && (
+                      <form action={handleEdit}>
+                        <EditableDataPair
+                          value={trip.lodging_name}
+                          property="Lodging"
+                          inputs={<DestinationCombobox field="lodging_name" />}
+                        />
+                      </form>
+                    )}
                   </CardContent>
                 </Card>
                 <Card>
@@ -267,12 +251,6 @@ async function ViewTripTemplate({
                 </Card>
               </div>
             </div>
-            {/* <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
-                Discard
-              </Button>
-              <Button size="sm">Save Product</Button>
-            </div> */}
           </div>
         </div>
       </div>

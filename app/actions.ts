@@ -153,13 +153,12 @@ export const createTrip = async (formData: FormData) => {
 
 export const updateTrip = async (id: Trip["id"], formData: FormData) => {
   const supabase = createClient();
-  let { data, error } = await supabase
+  let { error } = await supabase
     .from("trips")
     .update([getTripsInsertionData(formData)])
     .eq("id", id);
   console.log({ formData });
   if (!error) {
-    console.log({ data });
     revalidatePath("/protected/trips");
     redirect("/protected/trips/" + id);
   } else {

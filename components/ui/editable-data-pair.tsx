@@ -7,21 +7,32 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "./input";
 import { Label } from "./label";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { ReactComponentElement } from "react";
+import { capitalize, cn } from "@/lib/utils";
+import { ReactComponentElement, useMemo } from "react";
 
 type Props = {
   property: string;
-  value: string;
-  input?: ReactComponentElement<any>;
+  value: string | null;
+  inputs?: ReactComponentElement<any> | ReactComponentElement<any>[];
   disabled?: boolean;
+  display?: ReactComponentElement<any>;
+  className?: string;
+  suppressLabel?: boolean;
 };
 
 const propertyMap: { [key: string]: string } = {
   "Display name": "username",
 };
 
-function EditableDataPair({ property, value, input, disabled }: Props) {
+function EditableDataPair({
+  property,
+  value,
+  inputs,
+  disabled,
+  display,
+  className,
+  suppressLabel,
+}: Props) {
   const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
@@ -32,35 +43,59 @@ function EditableDataPair({ property, value, input, disabled }: Props) {
     replace(`${pathname}?edit=${property}&newValue=${e.target.value}`);
   }
 
+  const content = useMemo(() => {
+    if (isEditing) {
+      if (!!inputs) {
+        return <>{inputs}</>;
+      } else {
+        return (
+          <Input
+            defaultValue={value || undefined}
+            onChange={handleChange}
+            name={propertyMap?.[property] || property}
+            id={propertyMap?.[property] || property}
+          />
+        );
+      }
+    }
+
+    if (display) {
+      return display;
+    } else {
+      return (
+        <span className={"text-primary min-h-10"}>
+          {value || `No ${propertyMap?.[property] || property} chosen yet!`}
+        </span>
+      );
+    }
+  }, [isEditing, inputs, value, display]);
+
   return (
-    <div className="flex w-full justify-between items-center">
+    <div
+      className={cn(
+        `flex w-full justify-between items-center flex-col ${className}`,
+        { "gap-2": !suppressLabel },
+      )}
+    >
       <div className="flex flex-col gap-1 w-full">
-        <Label className="" htmlFor={propertyMap?.[property] || property}>
-          {property}
+        <Label
+          htmlFor={propertyMap?.[property] || property}
+          className={cn({ "sr-only": suppressLabel })}
+        >
+          {capitalize(property)}
         </Label>
+      </div>
+      <div className={"flex items-center gap-2"}>
+        {content}
         {isEditing ? (
-          !!input ? (
-            input
-          ) : (
-            <Input
-              defaultValue={value}
-              onChange={handleChange}
-              name={propertyMap?.[property] || property}
-              id={propertyMap?.[property] || property}
-            />
-          )
+          <div className="flex gap-1">
+            <SaveButton disabled={disabled} />
+            <CancelButton />
+          </div>
         ) : (
-          <span className={"text-primary min-h-10"}>{value}</span>
+          <EditButton property={property} />
         )}
       </div>
-      {isEditing ? (
-        <div className="flex gap-1">
-          <SaveButton disabled={disabled} />
-          <CancelButton />
-        </div>
-      ) : (
-        <EditButton property={property} />
-      )}
     </div>
   );
 }

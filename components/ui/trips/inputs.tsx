@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +18,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { GeocodeSearchResult, Trip } from "@/global.types";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -28,15 +28,13 @@ import { FormType } from "@/global.types";
 import { FormContext, useTripForm } from "@/utils/FormContext";
 
 type Props = {
-  minDate: string;
-  label: string;
   defaultValue?: string;
 };
 
-export function StartDate({ minDate, label, defaultValue }: Props) {
+export function StartDate({ defaultValue }: Props) {
+  const minDate = formatDate(new Date());
   return (
     <div className="w-full">
-      <Label htmlFor="start_date">{label}</Label>
       <Input
         type="date"
         placeholder="start date"
@@ -48,16 +46,9 @@ export function StartDate({ minDate, label, defaultValue }: Props) {
     </div>
   );
 }
-export function EndDate({
-  label,
-  defaultValue,
-}: {
-  label: string;
-  defaultValue?: string;
-}) {
+export function EndDate({ defaultValue }: { defaultValue?: string }) {
   return (
     <div className="w-full">
-      <Label htmlFor="end_date">{label}</Label>
       <Input
         type="date"
         placeholder="end date"
@@ -138,7 +129,10 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
     field === "destination"
       ? searchParams.get("destination-search")
       : searchParams.get("lodging-search");
-  const defaultValue = searchTerm || "Where are you going?";
+  const defaultValue =
+    searchTerm || field === "destination"
+      ? "Where are you going?"
+      : "Where are you staying?";
 
   // callbacks
   const isSelected = useCallback(
@@ -161,7 +155,12 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
   const handleValueChange = useCallback(
     (value: string) => {
       router.replace(
-        pathname + "?" + createQueryString(field + "-search", value),
+        pathname +
+          "?" +
+          createQueryString(
+            (field === "destination" ? "destination" : "lodging") + "-search",
+            value,
+          ),
       );
     },
     [pathname],
@@ -205,6 +204,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
               : "lodging_coordinates"
           }
           className="hidden"
+          required
         />
       )}
       <Popover open={open} onOpenChange={setOpen}>
@@ -219,7 +219,9 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
               ? selectedOption?.display_name
               : searchResults?.length
                 ? "Select option..."
-                : defaultName || "Find your destination..."}
+                : defaultName || field === "destination"
+                  ? "Find your destination..."
+                  : "Find your lodging..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

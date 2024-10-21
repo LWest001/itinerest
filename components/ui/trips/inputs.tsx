@@ -161,6 +161,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
             (field === "destination" ? "destination" : "lodging") + "-search",
             value,
           ),
+        { scroll: false },
       );
     },
     [pathname],

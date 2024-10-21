@@ -42,7 +42,9 @@ function EditableDataPair({
   const isEditing = edit === property;
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    replace(`${pathname}?edit=${property}&newValue=${e.target.value}`);
+    replace(`${pathname}?edit=${property}&newValue=${e.target.value}`, {
+      scroll: false,
+    });
   }
 
   const content = useMemo(() => {
@@ -129,7 +131,7 @@ function SaveButton({ disabled }: { disabled?: boolean }) {
 function CancelButton() {
   const pathname = usePathname();
   return (
-    <Link className={linkButtonStyles} href={pathname} replace>
+    <Link className={linkButtonStyles} href={pathname} replace scroll={false}>
       <X className="h-4 w-4 text-muted-foreground" />
       <span className="sr-only">Cancel changes</span>
     </Link>
@@ -143,6 +145,7 @@ export function EditButton({ property }: { property: string }) {
       className={linkButtonStyles}
       href={`${pathname}?edit=${property}`}
       replace
+      scroll={false}
     >
       <Edit className="h-4 w-4 text-primary" />
       <span className="sr-only">Edit {property}</span>

@@ -220,9 +220,10 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
               ? selectedOption?.display_name
               : searchResults?.length
                 ? "Select option..."
-                : defaultName || field === "destination"
-                  ? "Find your destination..."
-                  : "Find your lodging..."}
+                : defaultName ||
+                  (field === "destination"
+                    ? "Find your destination..."
+                    : "Find your lodging...")}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

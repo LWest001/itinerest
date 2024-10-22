@@ -1,6 +1,6 @@
 "use client";
 
-import { GeocodeSearchResult, Trip } from "@/global.types";
+import { Trip } from "@/global.types";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,

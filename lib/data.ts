@@ -1,9 +1,4 @@
-import {
-  GeocodeSearchResult,
-  MapboxGeocodingResponse,
-  Profile,
-  Trip,
-} from "@/global.types";
+import { MapboxGeocodingResponse, Profile, Trip } from "@/global.types";
 import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 

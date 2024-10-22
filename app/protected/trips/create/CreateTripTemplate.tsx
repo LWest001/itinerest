@@ -3,12 +3,12 @@
 import { createTrip } from "@/app/actions";
 import Breadcrumbs from "@/components/ui/breadcrumbs/breadcrumbs";
 import FormFields from "@/components/ui/trips/formfields";
-import { GeocodeSearchResult, Trip } from "@/global.types";
+import { MapboxGeocodingFeature } from "@/global.types";
 import { FormContext } from "@/utils/FormContext";
 
 type Props = {
-  destinationResults: GeocodeSearchResult[];
-  lodgingResults: GeocodeSearchResult[];
+  destinationResults: MapboxGeocodingFeature[];
+  lodgingResults: MapboxGeocodingFeature[];
 };
 
 export default function CreateTripTemplate({

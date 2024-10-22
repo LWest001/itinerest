@@ -119,7 +119,7 @@ async function ViewTripTemplate({
                           <form
                             action={handleEdit}
                             // className="flex justify-between flex-wrap gap-5 items-center"
-                            className="grid items-center grid-cols-1 xs:grid-cols-[2fr_1fr_2fr] gap-2"
+                            className="grid items-center grid-cols-[2fr_1fr_2fr] gap-2"
                           >
                             <EditableDataPair
                               value={trip.start_date}

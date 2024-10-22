@@ -39,7 +39,6 @@ export default async function RootLayout({ children }: Props) {
               <nav className="fixed w-full bg-background flex justify-center border-b border-b-foreground/10 h-16 z-10">
                 <div className="w-full  flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold ">
-                    <SideNavMobile />
                     <Link
                       href={"/"}
                       className={`${baskerville.className} text-xl`}

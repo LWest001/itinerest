@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
 type Props = {
-  searchParams: Message;
+  searchParams: Promise<Message>;
 };
 
 export default async function ForgotPassword(props: Props) {

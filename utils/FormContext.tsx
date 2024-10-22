@@ -1,10 +1,6 @@
 "use client";
 import { createContext, useContext } from "react";
-import {
-  Trip,
-  GeocodeSearchResult,
-  MapboxGeocodingResponse,
-} from "@/global.types";
+import { Trip, MapboxGeocodingResponse } from "@/global.types";
 
 type Props = {
   destinationResults: MapboxGeocodingResponse["features"];

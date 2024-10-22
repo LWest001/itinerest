@@ -19,13 +19,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn, formatDate } from "@/lib/utils";
-import { GeocodeSearchResult, Trip } from "@/global.types";
+import { MapboxGeocodingFeature } from "@/global.types";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 import { getPointFromGeocodeResult } from "@/lib/utils";
-import { FormType } from "@/global.types";
-import { FormContext, useTripForm } from "@/utils/FormContext";
+import { useTripForm } from "@/utils/FormContext";
 
 type Props = {
   defaultValue?: string;
@@ -116,7 +115,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
   const [forceMount, setForceMount] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [selectedOption, setSelectedOption] =
-    useState<GeocodeSearchResult | null>(null);
+    useState<MapboxGeocodingFeature | null>(null);
 
   const { trip, destinationResults, lodgingResults } = useTripForm();
 
@@ -136,7 +135,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
 
   // callbacks
   const isSelected = useCallback(
-    (option: GeocodeSearchResult) => {
+    (option: MapboxGeocodingFeature) => {
       return JSON.stringify(selectedOption) === JSON.stringify(option);
     },
     [selectedOption],
@@ -187,10 +186,13 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
 
   return (
     <div className="w-full flex flex-col gap-1">
+      {/* <>
+
+      </> */}
       {/* This hidden input holds and sends the name of the location */}
       {selectedOption && (
         <Input
-          defaultValue={selectedOption?.display_name}
+          defaultValue={selectedOption?.properties.full_address}
           name={field}
           className="hidden"
         />
@@ -217,7 +219,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
             className=" justify-between text-wrap h-auto"
           >
             {selectedOption
-              ? selectedOption?.display_name
+              ? selectedOption?.properties.full_address
               : searchResults?.length
                 ? "Select option..."
                 : defaultName ||
@@ -258,7 +260,7 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
               <CommandGroup forceMount={forceMount}>
                 {searchResults.map((option) => (
                   <CommandItem
-                    key={option.place_id}
+                    key={option.id}
                     value={JSON.stringify(option)}
                     onSelect={(currentValue) => {
                       setSelectedOption(JSON.parse(currentValue));
@@ -267,11 +269,11 @@ export function DestinationCombobox({ field }: DestinationComboboxProps) {
                   >
                     <Check
                       className={cn(
-                        "mr-2 h-8 w-8",
+                        "mr-2 h-4 w-4 min-w-4",
                         isSelected(option) ? "opacity-100" : "opacity-0",
                       )}
                     />
-                    {option.display_name}
+                    {option.properties.full_address}
                   </CommandItem>
                 ))}
               </CommandGroup>

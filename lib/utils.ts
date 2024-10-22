@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { GeocodeSearchResult } from "@/global.types";
+import { MapboxGeocodingFeature } from "@/global.types";
 import { redirect } from "next/navigation";
 
 export function cn(...inputs: ClassValue[]) {
@@ -34,8 +34,8 @@ export function encodedRedirect(
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
 
-export function getPointFromGeocodeResult(result: GeocodeSearchResult) {
-  return `POINT(${result.lon} ${result.lat})`;
+export function getPointFromGeocodeResult(result: MapboxGeocodingFeature) {
+  return `POINT(${result.geometry.coordinates[0]} ${result.geometry.coordinates[1]})`;
 }
 
 export function getTripsInsertionData(data: FormData) {

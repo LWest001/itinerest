@@ -14,7 +14,7 @@ import { getUser } from "@/lib/data";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-  const supabase = createClient();
+  const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
   if (!email || !password) {
@@ -44,7 +44,7 @@ export const signUpAction = async (formData: FormData) => {
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -60,7 +60,7 @@ export const signInAction = async (formData: FormData) => {
 
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
-  const supabase = createClient();
+  const supabase = await createClient();
   const origin = (await headers()).get("origin");
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
@@ -93,7 +93,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
 };
 
 export const resetPasswordAction = async (formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
@@ -130,7 +130,7 @@ export const resetPasswordAction = async (formData: FormData) => {
 };
 
 export const signOutAction = async () => {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
@@ -138,7 +138,7 @@ export const signOutAction = async () => {
 /********* TRIP ACTIONS *********/
 
 export const createTrip = async (formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   let { data, error } = await supabase
     .from("trips")
     .insert([getTripsInsertionData(formData)])
@@ -152,7 +152,7 @@ export const createTrip = async (formData: FormData) => {
 };
 
 export const updateTrip = async (id: Trip["id"], formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   let { error } = await supabase
     .from("trips")
     .update([getTripsInsertionData(formData)])
@@ -167,7 +167,7 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
 };
 
 export const deleteTrip = async (id: Trip["id"]) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   let { data, error } = await supabase.from("trips").delete().eq("id", id);
   if (!error) {
     revalidatePath("/protected/trips");
@@ -180,7 +180,7 @@ export const deleteTrip = async (id: Trip["id"]) => {
 /********* PROFILE ACTIONS *********/
 
 export const updateProfile = async (formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const user = await getUser();
   const id = user?.id;
   const { data, error } = await supabase
@@ -199,7 +199,7 @@ export const updateProfile = async (formData: FormData) => {
 };
 
 const _removeOldAvatar = async (id: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("profiles")
     .select("avatar_url")
@@ -215,7 +215,7 @@ const _removeOldAvatar = async (id: string) => {
 };
 
 const _updateAvatarUrl = async (path: string, id: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const publicUrl = supabase.storage.from("avatars").getPublicUrl(path);
   const { data, error } = await supabase
     .from("profiles")
@@ -233,7 +233,7 @@ const _updateAvatarUrl = async (path: string, id: string) => {
 };
 
 export const uploadAvatar = async (formData: FormData) => {
-  const supabase = createClient();
+  const supabase = await createClient();
   const user = await getUser();
   if (user) {
     const { id } = user;

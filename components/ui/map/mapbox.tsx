@@ -29,11 +29,16 @@ function Mapbox({
         }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
       >
-        <HoverPin coords={center} text={trip.destination.split(",")[0]}>
+        <HoverPin
+          id="destination"
+          coords={center}
+          text={trip.destination.split(",")[0]}
+        >
           <MapPin size={24} fill="red" />
         </HoverPin>
         {trip?.lodging_name && lodgingCoords && (
           <HoverPin
+            id="hotel"
             coords={lodgingCoords}
             text={trip?.lodging_name.split(",")[0]}
           >

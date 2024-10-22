@@ -8,7 +8,7 @@ import { createClient } from "@/utils/supabase/server";
 import { User } from "@supabase/supabase-js";
 
 export async function getUser() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
 
   if (error) {
@@ -20,7 +20,8 @@ export async function getUser() {
 }
 
 export async function getAllTrips() {
-  const supabase = createClient();
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("trips")
     .select("*")
@@ -35,7 +36,7 @@ export async function getAllTrips() {
 }
 
 export async function getTripById(tripId: string) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("trips")
@@ -71,7 +72,7 @@ export async function getWktFromGeometry(geometry: unknown) {
     return;
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.rpc("get_wkt_from_geometry", {
     geometry: String(geometry),
@@ -89,7 +90,7 @@ export async function getUsersByIds(
   ids: string[] | null,
   excludeCurrentUser = false,
 ) {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!ids) {
     return [];
   }
@@ -118,7 +119,7 @@ export async function getUserProfile() {
     return null;
   }
   const { id } = user;
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("profiles")
     .select("*")

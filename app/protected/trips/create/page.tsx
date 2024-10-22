@@ -3,16 +3,17 @@ import { Trip } from "@/global.types";
 import CreateTripTemplate from "./CreateTripTemplate";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: Trip["id"];
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     "destination-search": string;
     "lodging-search": string;
-  };
+  }>;
 };
 
-export default async function Form({ searchParams }: Props) {
+export default async function Form(props: Props) {
+  const searchParams = await props.searchParams;
   const destinationResults = await searchLocation(
     searchParams["destination-search"],
   );

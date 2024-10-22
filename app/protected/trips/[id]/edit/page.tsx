@@ -7,16 +7,18 @@ import Loading from "./loading";
 import TripFormProvider from "@/utils/FormContext";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: Trip["id"];
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     "destination-search": string;
     "lodging-search": string;
-  };
+  }>;
 };
 
-export default async function EditTrip({ params, searchParams }: Props) {
+export default async function EditTrip(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const trip = await getTripById(params.id);
   const updateTripWithId = updateTrip.bind(null, params.id);
   const deleteTripWithId = deleteTrip.bind(null, params.id);

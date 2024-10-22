@@ -9,7 +9,8 @@ type Props = {
   searchParams: Message;
 };
 
-export default function Login({ searchParams }: Props) {
+export default async function Login(props: Props) {
+  const searchParams = await props.searchParams;
   return (
     <div className="w-full items-center flex justify-center h-full">
       <form className="flex-1 flex flex-col min-w-64 max-w-64">

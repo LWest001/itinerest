@@ -9,7 +9,8 @@ type Props = {
   searchParams: Message;
 };
 
-export default function Signup({ searchParams }: Props) {
+export default async function Signup(props: Props) {
+  const searchParams = await props.searchParams;
   if ("message" in searchParams) {
     return (
       <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">

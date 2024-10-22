@@ -10,16 +10,18 @@ import { updateTrip } from "@/app/actions";
 import TripFormProvider from "@/utils/FormContext";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     "destination-search": string;
     "lodging-search": string;
-  };
+  }>;
 };
 
-async function ViewTrip({ params, searchParams }: Props) {
+async function ViewTrip(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const trip = await getTripById(params.id);
   const updateTripWithId = updateTrip.bind(null, params.id);
   const collaborators = trip

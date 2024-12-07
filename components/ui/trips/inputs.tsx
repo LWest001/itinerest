@@ -28,15 +28,16 @@ import { useTripForm } from "@/utils/FormContext";
 
 type Props = {
   defaultValue?: string;
+  withLabel?: boolean;
 };
 
-export function StartDate({ defaultValue }: Props) {
+export function StartDate({ defaultValue, withLabel }: Props) {
   const minDate = formatDate(new Date());
   return (
     <div className="w-full">
+      {withLabel && <Label htmlFor="start_date">Start date</Label>}
       <Input
         type="date"
-        placeholder="start date"
         name="start_date"
         min={minDate}
         defaultValue={defaultValue}
@@ -45,36 +46,11 @@ export function StartDate({ defaultValue }: Props) {
     </div>
   );
 }
-export function EndDate({ defaultValue }: { defaultValue?: string }) {
+export function EndDate({ defaultValue, withLabel }: Props) {
   return (
     <div className="w-full">
-      <Input
-        type="date"
-        placeholder="end date"
-        name="end_date"
-        defaultValue={defaultValue}
-        required
-      />
-    </div>
-  );
-}
-
-export function LodgingName({
-  label,
-  defaultValue,
-}: {
-  label: string;
-  defaultValue?: string | null;
-}) {
-  return (
-    <div className="w-full">
-      <Label htmlFor="lodging_name">{label}</Label>
-      <Input
-        type="text"
-        placeholder="Where are you staying?"
-        name="lodging_name"
-        defaultValue={defaultValue ? defaultValue : undefined}
-      />
+      {withLabel && <Label htmlFor="end_date">End date</Label>}
+      <Input type="date" name="end_date" defaultValue={defaultValue} required />
     </div>
   );
 }

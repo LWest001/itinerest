@@ -8,7 +8,7 @@ import HeaderAuth from "@/components/header-auth";
 import Image from "next/image";
 import icon from "@/app/icon.svg";
 import { SideNavMobile } from "@/components/ui/dashboard/sidenav-mobile";
-
+import { Toaster } from "@/components/ui/toaster";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -69,6 +69,7 @@ export default async function RootLayout({ children }: Props) {
               </footer>
             </div>
           </main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

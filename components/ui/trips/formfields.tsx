@@ -7,9 +7,10 @@ import { useTripForm } from "@/utils/FormContext";
 
 type Props = {
   formType: FormType;
+  withLabels?: boolean;
 };
 
-function FormFields({ formType }: Props) {
+function FormFields({ formType, withLabels }: Props) {
   const { trip } = useTripForm();
   const isEdit = formType === "edit" && !!trip;
 
@@ -21,8 +22,14 @@ function FormFields({ formType }: Props) {
       />
       <DestinationCombobox field={"destination"} />
       <DestinationCombobox field={"lodging_name"} />
-      <StartDate defaultValue={isEdit ? trip?.start_date : undefined} />
-      <EndDate defaultValue={isEdit ? trip?.end_date : undefined} />
+      <StartDate
+        defaultValue={isEdit ? trip?.start_date : undefined}
+        withLabel={withLabels}
+      />
+      <EndDate
+        defaultValue={isEdit ? trip?.end_date : undefined}
+        withLabel={withLabels}
+      />
       <Submit type="submit">Save trip</Submit>
     </>
   );

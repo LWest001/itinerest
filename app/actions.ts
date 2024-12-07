@@ -158,6 +158,7 @@ export const updateTrip = async (id: Trip["id"], formData: FormData) => {
     .update([getTripsInsertionData(formData)])
     .eq("id", id);
   console.log({ formData });
+
   if (!error) {
     revalidatePath("/protected/trips");
     redirect("/protected/trips/" + id);

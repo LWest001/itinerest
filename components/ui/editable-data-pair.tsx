@@ -9,6 +9,7 @@ import { Label } from "./label";
 import Link from "next/link";
 import { capitalize, cn } from "@/lib/utils";
 import { ReactComponentElement, useMemo } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
   property: string;
@@ -90,7 +91,7 @@ function EditableDataPair({
         {!withContent &&
           (isEditing ? (
             <div className="flex gap-1">
-              <SaveButton disabled={disabled} />
+              <SaveButton disabled={disabled} property={property} />
               <CancelButton />
             </div>
           ) : (
@@ -102,7 +103,7 @@ function EditableDataPair({
         {withContent &&
           (isEditing ? (
             <div className="flex gap-1">
-              <SaveButton disabled={disabled} />
+              <SaveButton disabled={disabled} property={property} />
               <CancelButton />
             </div>
           ) : (
@@ -118,9 +119,27 @@ export default EditableDataPair;
 const buttonStyles = "aspect-square p-0 w-6 h-6";
 const linkButtonStyles = cn(buttonVariants({ variant: "ghost" }), buttonStyles);
 
-function SaveButton({ disabled }: { disabled?: boolean }) {
+function SaveButton({
+  disabled,
+  property,
+}: {
+  disabled?: boolean;
+  property: string;
+}) {
+  const { toast } = useToast();
+
   return (
-    <Button variant={"ghost"} className={buttonStyles} disabled={disabled}>
+    <Button
+      variant={"ghost"}
+      className={buttonStyles}
+      disabled={disabled}
+      onClick={() =>
+        toast({
+          title: "Changes saved!",
+          description: `Your change to ${propertyMap?.[property]?.toLocaleLowerCase() || property.toLocaleLowerCase()} have been saved.`,
+        })
+      }
+    >
       <Check className="h-4 w-4 text-primary" />
       <span className="sr-only">Save changes</span>
     </Button>

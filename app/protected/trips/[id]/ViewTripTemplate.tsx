@@ -101,6 +101,7 @@ async function ViewTripTemplate({
                     <CardTitle>Trip Details</CardTitle>
                     <CardDescription>Trip description</CardDescription>
                   </CardHeader>
+
                   <CardContent className="flex flex-col gap-2">
                     {trip && (
                       <form action={handleEdit}>

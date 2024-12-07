@@ -36,7 +36,7 @@ export default function CreateTripTemplate({
             lodgingResults,
           }}
         >
-          <FormFields formType="create" />
+          <FormFields formType="create" withLabels />
         </FormContext.Provider>
       </form>
     </div>

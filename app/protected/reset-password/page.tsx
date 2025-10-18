@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 type Props = {
-  searchParams: Message;
+  searchParams: Promise<Message>;
 };
 
 export default async function ResetPassword(props: Props) {
